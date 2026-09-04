@@ -3,7 +3,10 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const client = new MongoClient(process.env.MONGO_URI);
+const client = new MongoClient(process.env.MONGO_URI, {
+    tls: true,
+    tlsAllowInvalidCertificates: true
+});
 
 async function testConnection() {
     try {
