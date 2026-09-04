@@ -8,9 +8,11 @@ dotenv.config();
 const createAdmin = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
-            tls: true,
-            tlsAllowInvalidCertificates: true
+        tls: true,
+        tlsAllowInvalidCertificates: true
         });
+
+        console.log("MongoDB connected successfully");
 
         const hashedPassword = await bcrypt.hash("AdminPassword123", 10);
 
