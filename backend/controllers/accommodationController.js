@@ -40,3 +40,29 @@ const getAccommodationById = async (req, res, next) => {
         next(error);
     }
 };
+
+const updateAccommodation = async (req, res, next) => {
+    try {
+        const accommodation = await Accommodation.findById(req.params.id);
+
+        if (!accommodation) {
+            return res.status(404).json({
+                message: "Accommodation not found"
+            });
+        }
+
+        if (accommodation.host.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "You are not authorized to update this accommodation"
+            });
+        }
+
+        Object.assign(accommodation, req.body);
+
+        const updatedAccommodation = await accommodation.save();
+
+        res.status(200).json(updatedAccommodation);
+    } catch (error) {
+        next(error);
+    }
+};
