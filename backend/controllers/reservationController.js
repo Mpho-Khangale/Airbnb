@@ -107,3 +107,27 @@ const getUserReservations = async (req, res, next) => {
         next(error);
     }
 };
+
+// Get reservations for accommodations owned by the logged-in host
+const getHostReservations = async (req, res, next) => {
+    try {
+        const accommodations = await Accommodation.find({
+            host: req.user.id
+        }).select("_id");
+
+        const accommodationIds = accommodations.map(
+            accommodation => accommodation._id
+        );
+
+        const reservations = await Reservation.find({
+            accommodationId: { $in: accommodationIds }
+        })
+            .populate("accommodationId")
+            .populate("userId", "username email")
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(reservations);
+    } catch (error) {
+        next(error);
+    }
+};
