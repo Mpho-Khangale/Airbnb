@@ -131,3 +131,81 @@ const getHostReservations = async (req, res, next) => {
         next(error);
     }
 };
+
+const updateReservation = async (req, res, next) => {
+    try {
+        const reservation = await Reservation.findById(req.params.id);
+
+        if (!reservation) {
+            return res.status(404).json({
+                message: "Reservation not found"
+            });
+        }
+
+        if (reservation.userId.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "You are not authorized to update this reservation"
+            });
+        }
+
+        const {
+            checkIn,
+            checkOut,
+            guests
+        } = req.body;
+
+        if (checkIn) {
+            reservation.checkIn = new Date(checkIn);
+        }
+
+        if (checkOut) {
+            reservation.checkOut = new Date(checkOut);
+        }
+
+        if (guests) {
+            reservation.guests = guests;
+        }
+
+        const accommodation = await Accommodation.findById(
+            reservation.accommodationId
+        );
+
+        if (!accommodation) {
+            return res.status(404).json({
+                message: "Accommodation not found"
+            });
+        }
+
+        if (reservation.guests > accommodation.guests) {
+            return res.status(400).json({
+                message: `This accommodation can only accommodate ${accommodation.guests} guests`
+            });
+        }
+
+        if (reservation.checkOut <= reservation.checkIn) {
+            return res.status(400).json({
+                message: "Check-out date must be after check-in date"
+            });
+        }
+
+        const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
+        const numberOfNights = Math.ceil(
+            (reservation.checkOut - reservation.checkIn) /
+            millisecondsPerDay
+        );
+
+        reservation.totalPrice =
+            accommodation.price * numberOfNights +
+            accommodation.cleaningFee +
+            accommodation.serviceFee +
+            accommodation.occupancyTaxes;
+
+        const updatedReservation = await reservation.save();
+
+        res.status(200).json(updatedReservation);
+    } catch (error) {
+        next(error);
+    }
+};
+
