@@ -40,20 +40,21 @@ const createReservation = async (req, res, next) => {
             });
         }
 
+        // Check if the accommodation is already reserved for these dates
         const overlappingReservation = await Reservation.findOne({
-        accommodationId,
-        checkIn: { $lt: new Date(checkOut) },
-        checkOut: { $gt: new Date(checkIn) }
-       });
+            accommodationId,
+            checkIn: { $lt: new Date(checkOut) },
+            checkOut: { $gt: new Date(checkIn) }
+        });
 
-       if (overlappingReservation) {
-           return res.status(409).json({
-           message: "This accommodation is already reserved for the selected dates"
-           });
-           
-       }
+        if (overlappingReservation) {
+            return res.status(409).json({
+                message: "This accommodation is already reserved for the selected dates"
+            });
+        }
 
         const millisecondsPerDay = 1000 * 60 * 60 * 24;
+
         const numberOfNights = Math.ceil(
             (checkOutDate - checkInDate) / millisecondsPerDay
         );
@@ -82,6 +83,7 @@ const createReservation = async (req, res, next) => {
     }
 };
 
+// Get one reservation
 const getReservationById = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id)
@@ -145,6 +147,7 @@ const getHostReservations = async (req, res, next) => {
     }
 };
 
+// Update a reservation
 const updateReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id);
@@ -201,6 +204,20 @@ const updateReservation = async (req, res, next) => {
             });
         }
 
+        // Check if the updated dates overlap another reservation
+        const overlappingReservation = await Reservation.findOne({
+            accommodationId: reservation.accommodationId,
+            _id: { $ne: reservation._id },
+            checkIn: { $lt: reservation.checkOut },
+            checkOut: { $gt: reservation.checkIn }
+        });
+
+        if (overlappingReservation) {
+            return res.status(409).json({
+                message: "This accommodation is already reserved for the selected dates"
+            });
+        }
+
         const millisecondsPerDay = 1000 * 60 * 60 * 24;
 
         const numberOfNights = Math.ceil(
@@ -222,6 +239,7 @@ const updateReservation = async (req, res, next) => {
     }
 };
 
+// Delete a reservation
 const deleteReservation = async (req, res, next) => {
     try {
         const reservation = await Reservation.findById(req.params.id);
@@ -256,4 +274,3 @@ module.exports = {
     updateReservation,
     deleteReservation
 };
-
