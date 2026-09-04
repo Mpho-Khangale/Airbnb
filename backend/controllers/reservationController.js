@@ -68,3 +68,27 @@ const createReservation = async (req, res, next) => {
         next(error);
     }
 };
+
+const getReservationById = async (req, res, next) => {
+    try {
+        const reservation = await Reservation.findById(req.params.id)
+            .populate("accommodationId")
+            .populate("userId", "username email");
+
+        if (!reservation) {
+            return res.status(404).json({
+                message: "Reservation not found"
+            });
+        }
+
+        if (reservation.userId._id.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "You are not authorized to view this reservation"
+            });
+        }
+
+        res.status(200).json(reservation);
+    } catch (error) {
+        next(error);
+    }
+};
