@@ -40,6 +40,19 @@ const createReservation = async (req, res, next) => {
             });
         }
 
+        const overlappingReservation = await Reservation.findOne({
+        accommodationId,
+        checkIn: { $lt: new Date(checkOut) },
+        checkOut: { $gt: new Date(checkIn) }
+       });
+
+       if (overlappingReservation) {
+           return res.status(409).json({
+           message: "This accommodation is already reserved for the selected dates"
+           });
+           
+       }
+
         const millisecondsPerDay = 1000 * 60 * 60 * 24;
         const numberOfNights = Math.ceil(
             (checkOutDate - checkInDate) / millisecondsPerDay
