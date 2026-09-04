@@ -66,3 +66,38 @@ const updateAccommodation = async (req, res, next) => {
         next(error);
     }
 };
+
+// Delete an accommodation
+const deleteAccommodation = async (req, res, next) => {
+    try {
+        const accommodation = await Accommodation.findById(req.params.id);
+
+        if (!accommodation) {
+            return res.status(404).json({
+                message: "Accommodation not found"
+            });
+        }
+
+        if (accommodation.host.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "You are not authorized to delete this accommodation"
+            });
+        }
+
+        await accommodation.deleteOne();
+
+        res.status(200).json({
+            message: "Accommodation deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    createAccommodation,
+    getAccommodations,
+    getAccommodationById,
+    updateAccommodation,
+    deleteAccommodation
+};
