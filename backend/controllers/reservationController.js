@@ -92,3 +92,18 @@ const getReservationById = async (req, res, next) => {
         next(error);
     }
 };
+
+// Get reservations made by the logged-in user
+const getUserReservations = async (req, res, next) => {
+    try {
+        const reservations = await Reservation.find({
+            userId: req.user.id
+        })
+            .populate("accommodationId")
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(reservations);
+    } catch (error) {
+        next(error);
+    }
+};
