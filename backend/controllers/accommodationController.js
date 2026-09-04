@@ -12,3 +12,14 @@ const createAccommodation = async (req, res, next) => {
         next(error);
     }
 };
+
+const getAccommodations = async (req, res, next) => {
+    try {
+        const accommodations = await Accommodation.find()
+            .populate("host", "username email");
+
+        res.status(200).json(accommodations);
+    } catch (error) {
+        next(error);
+    }
+};
