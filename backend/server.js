@@ -9,6 +9,7 @@ const reservationRoutes = require("./routes/reservationRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
 dotenv.config();
+console.log("MONGO_URI loaded:", !!process.env.MONGO_URI);
 
 const app = express();
 
