@@ -6,6 +6,7 @@ const connectDB = require("./config/db");
 const accommodationRoutes = require("./routes/accommodationRoutes");
 const userRoutes = require("./routes/userRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
+const errorHandler = require("./middleware/errorHandler");
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.use(express.json());
 app.use("/api/accommodations", accommodationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/reservations", reservationRoutes);
+
+// Error handling middleware
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
     res.json({ message: "Airbnb API is running" });
