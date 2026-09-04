@@ -2,17 +2,46 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-
+// Register a new user
 const registerUser = async (req, res, next) => {
     try {
-        const { username, email, password} = req.body;
+        let { username, email, password } = req.body;
 
+        // Check required fields
         if (!username || !email || !password) {
             return res.status(400).json({
                 message: "Username, email and password are required"
             });
         }
 
+        // Clean up input
+        username = username.trim();
+        email = email.trim().toLowerCase();
+
+        // Validate username
+        if (username.length < 3 || username.length > 30) {
+            return res.status(400).json({
+                message: "Username must be between 3 and 30 characters"
+            });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                message: "Please provide a valid email address"
+            });
+        }
+
+        // Validate password
+        if (password.length < 8) {
+            return res.status(400).json({
+                message: "Password must be at least 8 characters long"
+            });
+        }
+
+        // Check if email is already registered
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -21,6 +50,7 @@ const registerUser = async (req, res, next) => {
             });
         }
 
+        // Hash password before storing it
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
@@ -44,15 +74,18 @@ const registerUser = async (req, res, next) => {
     }
 };
 
+// Login a user
 const loginUser = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        let { email, password } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email and password are required"
             });
         }
+
+        email = email.trim().toLowerCase();
 
         const user = await User.findOne({ email });
 
@@ -98,7 +131,6 @@ const loginUser = async (req, res, next) => {
         next(error);
     }
 };
-
 
 module.exports = {
     registerUser,
