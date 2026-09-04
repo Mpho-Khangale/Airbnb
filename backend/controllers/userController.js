@@ -99,33 +99,8 @@ const loginUser = async (req, res, next) => {
     }
 };
 
-const createAdminUser = async (req, res, next) => {
-    try {
-        const hashedPassword = await bcrypt.hash("AdminPassword123", 10);
-
-        const admin = await User.create({
-            username: "admin",
-            email: "admin@example.com",
-            password: hashedPassword,
-            role: "admin"
-        });
-
-        res.status(201).json({
-            message: "Admin created successfully",
-            user: {
-                id: admin._id,
-                username: admin.username,
-                email: admin.email,
-                role: admin.role
-            }
-        });
-    } catch (error) {
-        next(error);
-    }
-};
 
 module.exports = {
     registerUser,
-    loginUser,
-    createAdminUser
+    loginUser
 };
