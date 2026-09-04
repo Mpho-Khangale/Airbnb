@@ -10,13 +10,12 @@ const errorHandler = require("./middleware/errorHandler");
 
 dotenv.config();
 
-connectDB();
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// API routes
 app.use("/api/accommodations", accommodationRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/reservations", reservationRoutes);
@@ -24,12 +23,24 @@ app.use("/api/reservations", reservationRoutes);
 // Error handling middleware
 app.use(errorHandler);
 
+// Test route
 app.get("/", (req, res) => {
     res.json({ message: "Airbnb API is running" });
 });
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+const startServer = async () => {
+    try {
+        await connectDB();
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Failed to start server:", error.message);
+        process.exit(1);
+    }
+};
+
+startServer();
