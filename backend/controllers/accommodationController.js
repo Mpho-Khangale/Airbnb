@@ -57,9 +57,32 @@ const updateAccommodation = async (req, res, next) => {
             });
         }
 
-        Object.assign(accommodation, req.body);
+        const allowedFields = [
+    "title",
+    "location",
+    "description",
+    "type",
+    "bedrooms",
+    "bathrooms",
+    "guests",
+    "amenities",
+    "images",
+    "rating",
+    "reviews",
+    "price",
+    "weeklyDiscount",
+    "cleaningFee",
+    "serviceFee",
+    "occupancyTaxes"
+];
 
-        const updatedAccommodation = await accommodation.save();
+allowedFields.forEach(field => {
+    if (req.body[field] !== undefined) {
+        accommodation[field] = req.body[field];
+    }
+});
+
+const updatedAccommodation = await accommodation.save();
 
         res.status(200).json(updatedAccommodation);
     } catch (error) {
