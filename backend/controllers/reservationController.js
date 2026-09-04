@@ -209,3 +209,38 @@ const updateReservation = async (req, res, next) => {
     }
 };
 
+const deleteReservation = async (req, res, next) => {
+    try {
+        const reservation = await Reservation.findById(req.params.id);
+
+        if (!reservation) {
+            return res.status(404).json({
+                message: "Reservation not found"
+            });
+        }
+
+        if (reservation.userId.toString() !== req.user.id) {
+            return res.status(403).json({
+                message: "You are not authorized to delete this reservation"
+            });
+        }
+
+        await reservation.deleteOne();
+
+        res.status(200).json({
+            message: "Reservation deleted successfully"
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = {
+    createReservation,
+    getReservationById,
+    getUserReservations,
+    getHostReservations,
+    updateReservation,
+    deleteReservation
+};
+
