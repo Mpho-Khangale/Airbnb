@@ -1,9 +1,78 @@
 const Accommodation = require("../models/Accommodation");
 
+// Create a new accommodation
 const createAccommodation = async (req, res, next) => {
     try {
+        const {
+            title,
+            location,
+            description,
+            type,
+            bedrooms,
+            bathrooms,
+            guests,
+            amenities,
+            images,
+            rating,
+            reviews,
+            price,
+            weeklyDiscount,
+            cleaningFee,
+            serviceFee,
+            occupancyTaxes
+        } = req.body;
+
+        // Check required fields
+        if (
+            !title ||
+            !location ||
+            !description ||
+            !type ||
+            bedrooms === undefined ||
+            bathrooms === undefined ||
+            guests === undefined ||
+            price === undefined
+        ) {
+            return res.status(400).json({
+                message: "Title, location, description, type, bedrooms, bathrooms, guests and price are required"
+            });
+        }
+
+        // Validate numeric values
+        if (
+            bedrooms < 0 ||
+            bathrooms < 0 ||
+            guests < 1 ||
+            price < 0 ||
+            (rating !== undefined && (rating < 0 || rating > 5)) ||
+            (reviews !== undefined && reviews < 0) ||
+            (weeklyDiscount !== undefined && weeklyDiscount < 0) ||
+            (cleaningFee !== undefined && cleaningFee < 0) ||
+            (serviceFee !== undefined && serviceFee < 0) ||
+            (occupancyTaxes !== undefined && occupancyTaxes < 0)
+        ) {
+            return res.status(400).json({
+                message: "Invalid accommodation values"
+            });
+        }
+
         const accommodation = await Accommodation.create({
-            ...req.body,
+            title: title.trim(),
+            location: location.trim(),
+            description: description.trim(),
+            type: type.trim(),
+            bedrooms,
+            bathrooms,
+            guests,
+            amenities: amenities || [],
+            images: images || [],
+            rating: rating || 0,
+            reviews: reviews || 0,
+            price,
+            weeklyDiscount: weeklyDiscount || 0,
+            cleaningFee: cleaningFee || 0,
+            serviceFee: serviceFee || 0,
+            occupancyTaxes: occupancyTaxes || 0,
             host: req.user.id
         });
 
@@ -13,6 +82,7 @@ const createAccommodation = async (req, res, next) => {
     }
 };
 
+// Get all accommodations
 const getAccommodations = async (req, res, next) => {
     try {
         const accommodations = await Accommodation.find()
@@ -24,6 +94,7 @@ const getAccommodations = async (req, res, next) => {
     }
 };
 
+// Get one accommodation by ID
 const getAccommodationById = async (req, res, next) => {
     try {
         const accommodation = await Accommodation.findById(req.params.id)
@@ -41,6 +112,7 @@ const getAccommodationById = async (req, res, next) => {
     }
 };
 
+// Update an accommodation
 const updateAccommodation = async (req, res, next) => {
     try {
         const accommodation = await Accommodation.findById(req.params.id);
@@ -58,31 +130,50 @@ const updateAccommodation = async (req, res, next) => {
         }
 
         const allowedFields = [
-    "title",
-    "location",
-    "description",
-    "type",
-    "bedrooms",
-    "bathrooms",
-    "guests",
-    "amenities",
-    "images",
-    "rating",
-    "reviews",
-    "price",
-    "weeklyDiscount",
-    "cleaningFee",
-    "serviceFee",
-    "occupancyTaxes"
-];
+            "title",
+            "location",
+            "description",
+            "type",
+            "bedrooms",
+            "bathrooms",
+            "guests",
+            "amenities",
+            "images",
+            "rating",
+            "reviews",
+            "price",
+            "weeklyDiscount",
+            "cleaningFee",
+            "serviceFee",
+            "occupancyTaxes"
+        ];
 
-allowedFields.forEach(field => {
-    if (req.body[field] !== undefined) {
-        accommodation[field] = req.body[field];
-    }
-});
+        allowedFields.forEach(field => {
+            if (req.body[field] !== undefined) {
+                accommodation[field] = req.body[field];
+            }
+        });
 
-const updatedAccommodation = await accommodation.save();
+        // Validate updated values
+        if (
+            accommodation.bedrooms < 0 ||
+            accommodation.bathrooms < 0 ||
+            accommodation.guests < 1 ||
+            accommodation.price < 0 ||
+            accommodation.rating < 0 ||
+            accommodation.rating > 5 ||
+            accommodation.reviews < 0 ||
+            accommodation.weeklyDiscount < 0 ||
+            accommodation.cleaningFee < 0 ||
+            accommodation.serviceFee < 0 ||
+            accommodation.occupancyTaxes < 0
+        ) {
+            return res.status(400).json({
+                message: "Invalid accommodation values"
+            });
+        }
+
+        const updatedAccommodation = await accommodation.save();
 
         res.status(200).json(updatedAccommodation);
     } catch (error) {
