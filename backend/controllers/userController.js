@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res, next) => {
     try {
-        const { username, email, password, role } = req.body;
+        const { username, email, password} = req.body;
 
         if (!username || !email || !password) {
             return res.status(400).json({
@@ -27,7 +27,7 @@ const registerUser = async (req, res, next) => {
             username,
             email,
             password: hashedPassword,
-            role: role || "user"
+            role: "user"
         });
 
         res.status(201).json({
