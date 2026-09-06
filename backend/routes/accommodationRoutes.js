@@ -13,6 +13,7 @@ const router = express.Router();
 
 router.get("/", getAccommodations);
 
+
 router.get("/:id", getAccommodationById);
 
 router.post("/", protect, adminOnly, createAccommodation);
