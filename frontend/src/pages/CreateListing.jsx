@@ -1,0 +1,313 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import AdminNavbar from "../components/AdminNavbar";
+
+function CreateListing() {
+    const navigate = useNavigate();
+
+    const [formData, setFormData] = useState({
+        title: "",
+        location: "",
+        description: "",
+        type: "",
+        bedrooms: 1,
+        bathrooms: 1,
+        guests: 1,
+        price: "",
+        cleaningFee: "",
+        serviceFee: "",
+        amenities: "",
+        images: ""
+    });
+
+    const [error, setError] = useState("");
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+
+        setFormData((previousData) => ({
+            ...previousData,
+            [name]: value
+        }));
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setError("");
+
+        if (
+            !formData.title ||
+            !formData.location ||
+            !formData.description ||
+            !formData.type ||
+            !formData.price
+        ) {
+            setError("Please complete all required fields.");
+            return;
+        }
+
+        console.log("New listing:", formData);
+
+        // Backend connection will be added later.
+        navigate("/admin/listings");
+    };
+
+    return (
+        <>
+            <AdminNavbar />
+
+            <main className="admin-page">
+                <div className="admin-form-heading">
+                    <h1>Create Listing</h1>
+                    <p>Add a new property to Airbnb.</p>
+                </div>
+
+                <form
+                    className="listing-form"
+                    onSubmit={handleSubmit}
+                >
+                    {error && (
+                        <div className="auth-error">
+                            {error}
+                        </div>
+                    )}
+
+                    <div className="form-group">
+                        <label htmlFor="title">
+                            Listing title *
+                        </label>
+
+                        <input
+                            id="title"
+                            name="title"
+                            type="text"
+                            placeholder="e.g. Modern apartment with city views"
+                            value={formData.title}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="location">
+                            Location *
+                        </label>
+
+                        <input
+                            id="location"
+                            name="location"
+                            type="text"
+                            placeholder="e.g. Cape Town"
+                            value={formData.location}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description">
+                            Description *
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="6"
+                            placeholder="Describe the property..."
+                            value={formData.description}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="type">
+                            Property type *
+                        </label>
+
+                        <select
+                            id="type"
+                            name="type"
+                            value={formData.type}
+                            onChange={handleChange}
+                        >
+                            <option value="">
+                                Select property type
+                            </option>
+
+                            <option value="Entire apartment">
+                                Entire apartment
+                            </option>
+
+                            <option value="Entire home">
+                                Entire home
+                            </option>
+
+                            <option value="Private room">
+                                Private room
+                            </option>
+
+                            <option value="Guest house">
+                                Guest house
+                            </option>
+                        </select>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="guests">
+                                Guests
+                            </label>
+
+                            <input
+                                id="guests"
+                                name="guests"
+                                type="number"
+                                min="1"
+                                value={formData.guests}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="bedrooms">
+                                Bedrooms
+                            </label>
+
+                            <input
+                                id="bedrooms"
+                                name="bedrooms"
+                                type="number"
+                                min="0"
+                                value={formData.bedrooms}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="bathrooms">
+                                Bathrooms
+                            </label>
+
+                            <input
+                                id="bathrooms"
+                                name="bathrooms"
+                                type="number"
+                                min="0"
+                                value={formData.bathrooms}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="price">
+                                Price per night (R) *
+                            </label>
+
+                            <input
+                                id="price"
+                                name="price"
+                                type="number"
+                                min="0"
+                                placeholder="1450"
+                                value={formData.price}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="cleaningFee">
+                                Cleaning fee (R)
+                            </label>
+
+                            <input
+                                id="cleaningFee"
+                                name="cleaningFee"
+                                type="number"
+                                min="0"
+                                placeholder="350"
+                                value={formData.cleaningFee}
+                                onChange={handleChange}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="serviceFee">
+                                Service fee (R)
+                            </label>
+
+                            <input
+                                id="serviceFee"
+                                name="serviceFee"
+                                type="number"
+                                min="0"
+                                placeholder="250"
+                                value={formData.serviceFee}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="amenities">
+                            Amenities
+                        </label>
+
+                        <input
+                            id="amenities"
+                            name="amenities"
+                            type="text"
+                            placeholder="Wi-Fi, Kitchen, Parking, TV"
+                            value={formData.amenities}
+                            onChange={handleChange}
+                        />
+
+                        <small>
+                            Separate amenities with commas.
+                        </small>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="images">
+                            Image URL
+                        </label>
+
+                        <input
+                            id="images"
+                            name="images"
+                            type="url"
+                            placeholder="https://example.com/property.jpg"
+                            value={formData.images}
+                            onChange={handleChange}
+                        />
+
+                        <small>
+                            We'll improve image handling when we connect
+                            the backend.
+                        </small>
+                    </div>
+
+                    <div className="listing-form-actions">
+                        <button
+                            type="button"
+                            className="cancel-button"
+                            onClick={() =>
+                                navigate("/admin/listings")
+                            }
+                        >
+                            Cancel
+                        </button>
+
+                        <button
+                            type="submit"
+                            className="admin-primary-button form-submit"
+                        >
+                            Create Listing
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </>
+    );
+}
+
+export default CreateListing;
