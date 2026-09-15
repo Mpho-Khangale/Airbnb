@@ -14,6 +14,10 @@ function ListingDetails() {
     const [checkOut, setCheckOut] = useState("");
     const [guests, setGuests] = useState(1);
 
+    const [reservationError, setReservationError] = useState("");
+    const [reservationSuccess, setReservationSuccess] = useState("");
+    const [reserving, setReserving] = useState(false);
+
     useEffect(() => {
         const fetchListing = async () => {
             try {
