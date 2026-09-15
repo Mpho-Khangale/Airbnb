@@ -76,14 +76,23 @@ function Home() {
 
     <div className="search-item">
         <label htmlFor="location">Where</label>
-        <input
-            id="location"
-            type="text"
-            placeholder="Search destinations"
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
-        />
-    </div>
+
+    <select
+        id="location"
+        value={location}
+        onChange={(event) => setLocation(event.target.value)}
+    >
+        <option value="">
+            Select destination
+        </option>
+
+        {locations.map((item) => (
+            <option key={item} value={item}>
+                {item}
+            </option>
+        ))}
+    </select>
+</div>
 
     <div className="search-item">
         <label htmlFor="checkIn">Check in</label>
