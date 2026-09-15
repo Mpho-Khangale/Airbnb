@@ -8,10 +8,13 @@ function Login() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
 
-    const handleSubmit = (event) => {
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+
         setError("");
 
         if (!email || !password) {
@@ -19,10 +22,53 @@ function Login() {
             return;
         }
 
-        // Backend login will be connected later.
-        console.log("Login:", { email, password });
+        try {
+            setLoading(true);
 
-        navigate("/");
+            const response = await fetch(
+                "http://localhost:5000/api/users/login",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Login failed."
+                );
+            }
+
+            localStorage.setItem("token", data.token);
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify({
+                    id: data._id,
+                    username: data.username,
+                    email: data.email,
+                    role: data.role
+                })
+            );
+
+            navigate("/");
+        } catch (error) {
+            console.error(error);
+
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -33,7 +79,10 @@ function Login() {
                 <div className="auth-card">
                     <div className="auth-heading">
                         <h1>Log in</h1>
-                        <p>Welcome back to Airbnb</p>
+
+                        <p>
+                            Welcome back to Airbnb
+                        </p>
                     </div>
 
                     <form onSubmit={handleSubmit}>
@@ -44,7 +93,9 @@ function Login() {
                         )}
 
                         <div className="form-group">
-                            <label htmlFor="email">Email</label>
+                            <label htmlFor="email">
+                                Email
+                            </label>
 
                             <input
                                 id="email"
@@ -52,7 +103,9 @@ function Login() {
                                 placeholder="Enter your email"
                                 value={email}
                                 onChange={(event) =>
-                                    setEmail(event.target.value)
+                                    setEmail(
+                                        event.target.value
+                                    )
                                 }
                             />
                         </div>
@@ -68,7 +121,9 @@ function Login() {
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(event) =>
-                                    setPassword(event.target.value)
+                                    setPassword(
+                                        event.target.value
+                                    )
                                 }
                             />
                         </div>
@@ -76,8 +131,11 @@ function Login() {
                         <button
                             type="submit"
                             className="auth-button"
+                            disabled={loading}
                         >
-                            Log in
+                            {loading
+                                ? "Logging in..."
+                                : "Log in"}
                         </button>
                     </form>
 
