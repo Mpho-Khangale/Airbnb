@@ -958,3 +958,222 @@ button {
     color: #222222;
     font-weight: 600;
 }
+
+/* =========================
+   ADMIN
+========================= */
+
+.admin-navbar {
+    min-height: 75px;
+    padding: 0 5%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid #dddddd;
+    background: #ffffff;
+}
+
+.admin-logo {
+    color: #ff385c;
+    font-size: 26px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.admin-nav-links a {
+    color: #222222;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.admin-nav-links a:hover {
+    text-decoration: underline;
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-profile span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.admin-profile button {
+    padding: 9px 15px;
+
+    border: 1px solid #dddddd;
+    border-radius: 20px;
+
+    background: white;
+}
+
+.admin-page {
+    width: min(1100px, 90%);
+    margin: 0 auto;
+    padding: 50px 0 80px;
+}
+
+.admin-page-heading {
+    margin-bottom: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-page-heading h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.admin-page-heading p {
+    color: #717171;
+}
+
+.admin-primary-button {
+    padding: 13px 20px;
+
+    border-radius: 8px;
+
+    background: #ff385c;
+    color: white;
+
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.admin-listing-card {
+    padding: 20px 0;
+
+    display: flex;
+    gap: 25px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.admin-listing-image {
+    width: 260px;
+    min-width: 260px;
+    height: 180px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #eeeeee;
+    color: #717171;
+}
+
+.admin-listing-information {
+    flex: 1;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.admin-listing-information h2 {
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.admin-listing-information p {
+    margin-bottom: 8px;
+    color: #717171;
+}
+
+.admin-listing-actions {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.edit-button,
+.delete-button {
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.edit-button {
+    border: 1px solid #222222;
+
+    background: white;
+    color: #222222;
+}
+
+.delete-button {
+    border: none;
+
+    background: #ff385c;
+    color: white;
+}
+
+.admin-empty {
+    padding: 70px 0;
+    text-align: center;
+}
+
+.admin-empty h2 {
+    margin-bottom: 10px;
+}
+
+.admin-empty p {
+    color: #717171;
+}
+
+@media (max-width: 750px) {
+    .admin-navbar {
+        padding: 15px 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .admin-nav-links {
+        order: 3;
+        width: 100%;
+
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .admin-page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .admin-listing-card {
+        flex-direction: column;
+    }
+
+    .admin-listing-image {
+        width: 100%;
+        min-width: 0;
+        height: 230px;
+    }
+
+    .admin-listing-information {
+        flex-direction: column;
+    }
+
+    .admin-listing-actions {
+        align-items: center;
+    }
+}
