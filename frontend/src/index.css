@@ -1289,3 +1289,77 @@ button {
 
     font-size: 14px;
 }
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+.admin-login-page {
+    min-height: 100vh;
+    padding: 40px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f7f7f7;
+}
+
+.admin-login-card {
+    width: 100%;
+    max-width: 450px;
+
+    padding: 40px;
+
+    border: 1px solid #dddddd;
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.admin-login-logo {
+    margin-bottom: 30px;
+
+    color: #ff385c;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.admin-login-card h1 {
+    margin-bottom: 10px;
+
+    font-size: 28px;
+}
+
+.admin-login-description {
+    margin-bottom: 30px;
+
+    color: #717171;
+
+    line-height: 1.5;
+}
+
+.back-home-button {
+    width: 100%;
+
+    margin-top: 15px;
+    padding: 13px;
+
+    border: 1px solid #222222;
+    border-radius: 8px;
+
+    background: white;
+    color: #222222;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.back-home-button:hover {
+    background: #f7f7f7;
+}
