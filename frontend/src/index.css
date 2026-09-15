@@ -1440,3 +1440,81 @@ button {
     color: white;
 }
 
+.admin-reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-reservation-card {
+    display: flex;
+    overflow: hidden;
+    border: 1px solid #dddddd;
+    border-radius: 14px;
+    background: white;
+}
+
+.admin-reservation-image {
+    width: 300px;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #eeeeee;
+    color: #717171;
+}
+
+.admin-reservation-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.admin-reservation-content {
+    flex: 1;
+    padding: 24px;
+}
+
+.admin-reservation-content h2 {
+    margin: 5px 0 20px;
+}
+
+.admin-reservation-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 25px;
+}
+
+.admin-reservation-details p {
+    margin: 0;
+}
+
+.admin-reservation-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+@media (max-width: 700px) {
+    .admin-reservation-card {
+        flex-direction: column;
+    }
+
+    .admin-reservation-image {
+        width: 100%;
+        height: 220px;
+    }
+
+    .admin-reservation-details {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-reservation-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
