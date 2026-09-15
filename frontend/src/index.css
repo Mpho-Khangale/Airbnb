@@ -178,3 +178,67 @@ button {
     border: 1px solid #dddddd;
     border-radius: 12px;
 }
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .navbar-links,
+    .host-button {
+        display: none;
+    }
+
+    .hero-section {
+        padding: 50px 20px;
+    }
+
+    .hero-content h1 {
+        font-size: 36px;
+    }
+
+    .hero-search {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 15px;
+    }
+
+    .hero-search > div {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .hero-search button {
+        margin-top: 10px;
+        border-radius: 30px;
+        width: 100%;
+    }
+
+    .destination-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .experience-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .future-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .shop-section {
+        margin: 20px;
+        padding: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+    .destination-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .future-grid {
+        grid-template-columns: 1fr;
+    }
+}
