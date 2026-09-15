@@ -258,6 +258,12 @@ function Reservations() {
                                                         View stay
                                                     </Link>
                                                 )}
+
+                                                <button type="button" className="cancel-reservation-button" onClick={() =>handleCancel(reservation._id)}>
+                                                  Cancel reservation
+                                                </button>
+
+
                                             </div>
                                         </article>
                                     );
