@@ -1398,3 +1398,23 @@ button {
 .gallery-small div {
     overflow: hidden;
 }
+
+.reservation-error {
+    margin-top: 12px;
+    color: #c13515;
+    font-size: 14px;
+    text-align: center;
+}
+
+.reservation-success {
+    margin-top: 12px;
+    color: #008a05;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.reserve-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
