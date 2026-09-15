@@ -410,9 +410,21 @@ function ListingDetails() {
                             </select>
                         </div>
 
-                        <button className="reserve-button">
-                            Reserve
-                        </button>
+                        <button className="reserve-button" onClick={handleReserve} disabled={reserving}>
+                           {reserving ? "Reserving..." : "Reserve"}
+                       </button>
+
+                       {reservationError && (
+                          <p className="reservation-error">
+                            {reservationError}
+                          </p>
+          )}
+
+{reservationSuccess && (
+    <p className="reservation-success">
+        {reservationSuccess}
+    </p>
+)}
 
                         <p className="booking-message">
                             You won't be charged yet
