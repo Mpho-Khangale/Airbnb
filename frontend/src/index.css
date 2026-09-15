@@ -1363,3 +1363,9 @@ button {
 .back-home-button:hover {
     background: #f7f7f7;
 }
+.search-error {
+    margin-top: 12px;
+    color: #c13515;
+    font-size: 14px;
+    font-weight: 500;
+}
