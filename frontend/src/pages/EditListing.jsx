@@ -17,6 +17,7 @@ function EditListing() {
         price: "",
         cleaningFee: "",
         serviceFee: "",
+        occupancyTaxes: "",
         amenities: "",
         images: ""
     });
@@ -26,7 +27,7 @@ function EditListing() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
-    // Load the selected listing from MongoDB
+    // Load selected listing from MongoDB
     useEffect(() => {
         const fetchListing = async () => {
             try {
@@ -49,28 +50,49 @@ function EditListing() {
                 setFormData({
                     title: data.title || "",
                     location: data.location || "",
-                    description: data.description || "",
+                    description:
+                        data.description || "",
                     type: data.type || "",
 
-                    bedrooms: data.bedrooms ?? 1,
-                    bathrooms: data.bathrooms ?? 1,
-                    guests: data.guests ?? 1,
+                    bedrooms:
+                        data.bedrooms ?? 1,
 
-                    price: data.price ?? "",
+                    bathrooms:
+                        data.bathrooms ?? 1,
+
+                    guests:
+                        data.guests ?? 1,
+
+                    price:
+                        data.price ?? "",
+
                     cleaningFee:
                         data.cleaningFee ?? "",
+
                     serviceFee:
                         data.serviceFee ?? "",
 
-                    amenities: Array.isArray(
-                        data.amenities
-                    )
-                        ? data.amenities.join(", ")
-                        : "",
+                    occupancyTaxes:
+                        data.occupancyTaxes ?? "",
 
-                    images: Array.isArray(data.images)
-                        ? data.images[0] || ""
-                        : ""
+                    amenities:
+                        Array.isArray(
+                            data.amenities
+                        )
+                            ? data.amenities.join(
+                                  ", "
+                              )
+                            : "",
+
+                    // Load ALL existing images
+                    images:
+                        Array.isArray(
+                            data.images
+                        )
+                            ? data.images.join(
+                                  ", "
+                              )
+                            : ""
                 });
             } catch (error) {
                 console.error(error);
@@ -84,7 +106,8 @@ function EditListing() {
     }, [id]);
 
     const handleChange = (event) => {
-        const { name, value } = event.target;
+        const { name, value } =
+            event.target;
 
         setFormData((previousData) => ({
             ...previousData,
@@ -109,78 +132,115 @@ function EditListing() {
             setError(
                 "Please complete all required fields."
             );
+
             return;
         }
 
         const token =
-            localStorage.getItem("adminToken");
+            localStorage.getItem(
+                "adminToken"
+            );
 
         if (!token) {
             navigate("/admin/login");
             return;
         }
 
-        const updatedListing = {
-            title: formData.title.trim(),
+        // Convert amenities into array
+        const amenitiesArray =
+            formData.amenities
+                .split(",")
+                .map((amenity) =>
+                    amenity.trim()
+                )
+                .filter(Boolean);
 
-            location: formData.location.trim(),
+        // Convert image URLs into array
+        const imagesArray =
+            formData.images
+                .split(",")
+                .map((image) =>
+                    image.trim()
+                )
+                .filter(Boolean);
+
+        const updatedListing = {
+            title:
+                formData.title.trim(),
+
+            location:
+                formData.location.trim(),
 
             description:
                 formData.description.trim(),
 
             type: formData.type,
 
-            bedrooms: Number(
-                formData.bedrooms
-            ),
+            bedrooms:
+                Number(
+                    formData.bedrooms
+                ),
 
-            bathrooms: Number(
-                formData.bathrooms
-            ),
+            bathrooms:
+                Number(
+                    formData.bathrooms
+                ),
 
-            guests: Number(formData.guests),
+            guests:
+                Number(
+                    formData.guests
+                ),
 
-            price: Number(formData.price),
+            price:
+                Number(
+                    formData.price
+                ),
 
             cleaningFee:
-                Number(formData.cleaningFee) || 0,
+                Number(
+                    formData.cleaningFee
+                ) || 0,
 
             serviceFee:
-                Number(formData.serviceFee) || 0,
+                Number(
+                    formData.serviceFee
+                ) || 0,
 
-            amenities: formData.amenities
-                .split(",")
-                .map((amenity) =>
-                    amenity.trim()
-                )
-                .filter(Boolean),
+            occupancyTaxes:
+                Number(
+                    formData.occupancyTaxes
+                ) || 0,
 
-            images: formData.images.trim()
-                ? [formData.images.trim()]
-                : []
+            amenities:
+                amenitiesArray,
+
+            images:
+                imagesArray
         };
 
         try {
             setSaving(true);
 
-            const response = await fetch(
-                `http://localhost:5000/api/accommodations/${id}`,
-                {
-                    method: "PUT",
+            const response =
+                await fetch(
+                    `http://localhost:5000/api/accommodations/${id}`,
+                    {
+                        method: "PUT",
 
-                    headers: {
-                        "Content-Type":
-                            "application/json",
+                        headers: {
+                            "Content-Type":
+                                "application/json",
 
-                        Authorization:
-                            `Bearer ${token}`
-                    },
+                            Authorization:
+                                `Bearer ${token}`
+                        },
 
-                    body: JSON.stringify(
-                        updatedListing
-                    )
-                }
-            );
+                        body:
+                            JSON.stringify(
+                                updatedListing
+                            )
+                    }
+                );
 
             const data =
                 await response.json();
@@ -197,7 +257,9 @@ function EditListing() {
             );
 
             setTimeout(() => {
-                navigate("/admin/listings");
+                navigate(
+                    "/admin/listings"
+                );
             }, 800);
         } catch (error) {
             console.error(error);
@@ -229,17 +291,21 @@ function EditListing() {
 
             <main className="admin-page">
                 <div className="admin-form-heading">
-                    <h1>Update Listing</h1>
+                    <h1>
+                        Update Listing
+                    </h1>
 
                     <p>
-                        Edit the information for this
-                        property.
+                        Edit the information
+                        for this property.
                     </p>
                 </div>
 
                 <form
                     className="listing-form"
-                    onSubmit={handleSubmit}
+                    onSubmit={
+                        handleSubmit
+                    }
                 >
                     {error && (
                         <div className="auth-error">
@@ -262,8 +328,12 @@ function EditListing() {
                             id="edit-title"
                             name="title"
                             type="text"
-                            value={formData.title}
-                            onChange={handleChange}
+                            value={
+                                formData.title
+                            }
+                            onChange={
+                                handleChange
+                            }
                         />
                     </div>
 
@@ -276,8 +346,12 @@ function EditListing() {
                             id="edit-location"
                             name="location"
                             type="text"
-                            value={formData.location}
-                            onChange={handleChange}
+                            value={
+                                formData.location
+                            }
+                            onChange={
+                                handleChange
+                            }
                         />
                     </div>
 
@@ -293,7 +367,9 @@ function EditListing() {
                             value={
                                 formData.description
                             }
-                            onChange={handleChange}
+                            onChange={
+                                handleChange
+                            }
                         />
                     </div>
 
@@ -305,11 +381,16 @@ function EditListing() {
                         <select
                             id="edit-type"
                             name="type"
-                            value={formData.type}
-                            onChange={handleChange}
+                            value={
+                                formData.type
+                            }
+                            onChange={
+                                handleChange
+                            }
                         >
                             <option value="">
-                                Select property type
+                                Select property
+                                type
                             </option>
 
                             <option value="Entire apartment">
@@ -392,7 +473,8 @@ function EditListing() {
                     <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="edit-price">
-                                Price per night (R) *
+                                Price per night
+                                (R) *
                             </label>
 
                             <input
@@ -411,7 +493,8 @@ function EditListing() {
 
                         <div className="form-group">
                             <label htmlFor="edit-cleaning">
-                                Cleaning fee (R)
+                                Cleaning fee
+                                (R)
                             </label>
 
                             <input
@@ -449,6 +532,25 @@ function EditListing() {
                     </div>
 
                     <div className="form-group">
+                        <label htmlFor="edit-taxes">
+                            Occupancy taxes (R)
+                        </label>
+
+                        <input
+                            id="edit-taxes"
+                            name="occupancyTaxes"
+                            type="number"
+                            min="0"
+                            value={
+                                formData.occupancyTaxes
+                            }
+                            onChange={
+                                handleChange
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
                         <label htmlFor="edit-amenities">
                             Amenities
                         </label>
@@ -457,32 +559,46 @@ function EditListing() {
                             id="edit-amenities"
                             name="amenities"
                             type="text"
-                            placeholder="Wi-Fi, Kitchen, Parking, TV"
+                            placeholder="Wi-Fi, Kitchen, Parking, TV, Pool"
                             value={
                                 formData.amenities
                             }
-                            onChange={handleChange}
+                            onChange={
+                                handleChange
+                            }
                         />
 
                         <small>
-                            Separate amenities with
-                            commas.
+                            Separate amenities
+                            with commas.
                         </small>
                     </div>
 
                     <div className="form-group">
                         <label htmlFor="edit-images">
-                            Image URL
+                            Property image URLs
                         </label>
 
-                        <input
+                        <textarea
                             id="edit-images"
                             name="images"
-                            type="url"
-                            placeholder="https://example.com/property.jpg"
-                            value={formData.images}
-                            onChange={handleChange}
+                            rows="6"
+                            placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg, https://example.com/image3.jpg"
+                            value={
+                                formData.images
+                            }
+                            onChange={
+                                handleChange
+                            }
                         />
+
+                        <small>
+                            Add up to 5 image
+                            URLs separated by
+                            commas. The first
+                            image is used as the
+                            main property image.
+                        </small>
                     </div>
 
                     <div className="listing-form-actions">
@@ -501,7 +617,9 @@ function EditListing() {
                         <button
                             type="submit"
                             className="admin-primary-button form-submit"
-                            disabled={saving}
+                            disabled={
+                                saving
+                            }
                         >
                             {saving
                                 ? "Saving..."
