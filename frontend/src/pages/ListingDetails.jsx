@@ -67,6 +67,77 @@ function ListingDetails() {
         );
     };
 
+    const handleReserve = async () => {
+    setReservationError("");
+    setReservationSuccess("");
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        setReservationError(
+            "Please log in before making a reservation."
+        );
+        return;
+    }
+
+    if (!checkIn || !checkOut) {
+        setReservationError(
+            "Please select your check-in and check-out dates."
+        );
+        return;
+    }
+
+    if (nights <= 0) {
+        setReservationError(
+            "Check-out must be after check-in."
+        );
+        return;
+    }
+
+    try {
+        setReserving(true);
+
+        const response = await fetch(
+            "http://localhost:5000/api/reservations",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+
+                body: JSON.stringify({
+                    accommodationId: listing._id,
+                    checkIn,
+                    checkOut,
+                    guests,
+                    totalPrice: total
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                    "Unable to create reservation."
+            );
+        }
+
+        setReservationSuccess(
+            "Reservation created successfully!"
+        );
+    } catch (error) {
+        console.error(error);
+
+        setReservationError(error.message);
+    } finally {
+        setReserving(false);
+    }
+};
+
     if (loading) {
         return (
             <>
