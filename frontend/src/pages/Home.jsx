@@ -68,3 +68,25 @@ function Home() {
                         </div>
                     </div>
                 </section>
+
+                {/* Experiences Section */}
+                <section className="home-section">
+                    <h2>Discover Airbnb Experiences</h2>
+                    <p className="section-description">
+                        Find unique activities and experiences hosted by local people.
+                    </p>
+
+                    <div className="experience-grid">
+                        <div className="experience-card">
+                            <div className="experience-image">Experiences</div>
+                            <h3>Things to do</h3>
+                            <p>Discover exciting activities wherever you travel.</p>
+                        </div>
+
+                        <div className="experience-card">
+                            <div className="experience-image">Adventures</div>
+                            <h3>Adventures</h3>
+                            <p>Explore unforgettable experiences around the world.</p>
+                        </div>
+                    </div>
+                </section>
