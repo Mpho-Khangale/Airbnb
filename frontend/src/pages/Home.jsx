@@ -37,3 +37,34 @@ function Home() {
                         <button>Search</button>
                     </div>
                 </section>
+
+                {/* Inspiration Section */}
+                <section className="home-section">
+                    <h2>Inspiration for your next trip</h2>
+
+                    <div className="destination-grid">
+                        <div className="destination-card">
+                            <div className="placeholder-image">Cape Town</div>
+                            <h3>Cape Town</h3>
+                            <p>South Africa</p>
+                        </div>
+
+                        <div className="destination-card">
+                            <div className="placeholder-image">Johannesburg</div>
+                            <h3>Johannesburg</h3>
+                            <p>South Africa</p>
+                        </div>
+
+                        <div className="destination-card">
+                            <div className="placeholder-image">Durban</div>
+                            <h3>Durban</h3>
+                            <p>South Africa</p>
+                        </div>
+
+                        <div className="destination-card">
+                            <div className="placeholder-image">Knysna</div>
+                            <h3>Knysna</h3>
+                            <p>South Africa</p>
+                        </div>
+                    </div>
+                </section>
