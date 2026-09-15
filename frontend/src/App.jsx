@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminListings from "./pages/AdminListings";
 import CreateListing from "./pages/CreateListing";
+import EditListing from "./pages/EditListing";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/admin/listings" element={<AdminListings />} />
             <Route path="/admin/create-listing" element={<CreateListing />} />
+            <Route path="/admin/edit-listing/:id" element={<EditListing />} />
         </Routes>
     );
 }
