@@ -5,6 +5,7 @@ import ListingDetails from "./pages/ListingDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminListings from "./pages/AdminListings";
+import CreateListing from "./pages/CreateListing";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin/listings" element={<AdminListings />} />
+            <Route path="/admin/create-listing" element={<CreateListing />} />
         </Routes>
     );
 }

@@ -1177,3 +1177,102 @@ button {
         align-items: center;
     }
 }
+
+/* =========================
+   CREATE / EDIT LISTING
+========================= */
+
+.admin-form-heading {
+    margin-bottom: 35px;
+}
+
+.admin-form-heading h1 {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.admin-form-heading p {
+    color: #717171;
+}
+
+.listing-form {
+    max-width: 850px;
+}
+
+.listing-form textarea,
+.listing-form select {
+    width: 100%;
+    padding: 14px;
+
+    border: 1px solid #bbbbbb;
+    border-radius: 8px;
+
+    background: white;
+    font-family: inherit;
+    font-size: 15px;
+
+    outline: none;
+}
+
+.listing-form textarea {
+    resize: vertical;
+}
+
+.listing-form textarea:focus,
+.listing-form select:focus {
+    border-color: #222222;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 7px;
+
+    color: #717171;
+    font-size: 12px;
+}
+
+.listing-form-actions {
+    margin-top: 35px;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.cancel-button {
+    padding: 13px 22px;
+
+    border: 1px solid #222222;
+    border-radius: 8px;
+
+    background: white;
+    color: #222222;
+
+    font-weight: 600;
+}
+
+.form-submit {
+    border: none;
+    cursor: pointer;
+}
+
+@media (max-width: 650px) {
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .listing-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .listing-form-actions button {
+        width: 100%;
+    }
+}
