@@ -1276,3 +1276,16 @@ button {
         width: 100%;
     }
 }
+
+.form-success {
+    margin-bottom: 20px;
+    padding: 12px;
+
+    border: 1px solid #b7dfc2;
+    border-radius: 8px;
+
+    background: #effaf2;
+    color: #26733a;
+
+    font-size: 14px;
+}
