@@ -4,10 +4,11 @@ function AdminNavbar() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("adminAuthenticated");
+    localStorage.removeItem("adminToken");
+    localStorage.removeItem("adminUser");
 
-        navigate("/admin/login");
-    };
+    navigate("/admin/login");
+};
 
     return (
         <header className="admin-navbar">
