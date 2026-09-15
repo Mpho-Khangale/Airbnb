@@ -52,16 +52,12 @@ function Login() {
             localStorage.setItem("token", data.token);
 
             localStorage.setItem(
-                "user",
-                JSON.stringify({
-                    id: data._id,
-                    username: data.username,
-                    email: data.email,
-                    role: data.role
-                })
-            );
+            "user",
+            JSON.stringify(data.user)
+        );
 
             navigate("/");
+
         } catch (error) {
             console.error(error);
 
