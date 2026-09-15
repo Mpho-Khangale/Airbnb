@@ -1542,3 +1542,24 @@ button {
         height: 220px;
     }
 }
+
+.cancel-reservation-button {
+    margin-left: 20px;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #c13515;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: underline;
+
+    cursor: pointer;
+}
+
+.cancel-reservation-button:hover {
+    color: #8f1d0d;
+}
