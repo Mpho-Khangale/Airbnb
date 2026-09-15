@@ -35,9 +35,11 @@
 .host-button {
     border: none;
     background: transparent;
+    color: #222222;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .profile-button {
