@@ -1419,3 +1419,24 @@ button {
     cursor: not-allowed;
 }
 
+.admin-delete-button {
+    padding: 9px 16px;
+
+    border: 1px solid #c13515;
+    border-radius: 7px;
+
+    background: white;
+    color: #c13515;
+
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+.admin-delete-button:hover {
+    background: #c13515;
+    color: white;
+}
+

@@ -38,6 +38,57 @@ function AdminListings() {
         fetchListings();
     }, []);
 
+    const handleDelete = async (listingId) => {
+    const confirmed = window.confirm(
+        "Are you sure you want to delete this listing?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+        setError(
+            "Your admin session has expired. Please log in again."
+        );
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `http://localhost:5000/api/accommodations/${listingId}`,
+            {
+                method: "DELETE",
+
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                    "Unable to delete listing."
+            );
+        }
+
+        setListings((currentListings) =>
+            currentListings.filter(
+                (listing) =>
+                    listing._id !== listingId
+            )
+        );
+    } catch (error) {
+        console.error(error);
+        setError(error.message);
+    }
+};
+
     return (
         <>
             <AdminNavbar />
@@ -149,20 +200,30 @@ function AdminListings() {
                                         </div>
 
                                         <div className="admin-listing-actions">
-                                            <Link
-                                                to={`/listing/${listing._id}`}
-                                                className="admin-view-button"
-                                            >
-                                                View
-                                            </Link>
+    <Link
+        to={`/listing/${listing._id}`}
+        className="admin-view-button"
+    >
+        View
+    </Link>
 
-                                            <Link
-                                                to={`/admin/edit-listing/${listing._id}`}
-                                                className="admin-edit-button"
-                                            >
-                                                Edit
-                                            </Link>
-                                        </div>
+    <Link
+        to={`/admin/edit-listing/${listing._id}`}
+        className="admin-edit-button"
+    >
+        Edit
+    </Link>
+
+    <button
+        type="button"
+        className="admin-delete-button"
+        onClick={() =>
+            handleDelete(listing._id)
+        }
+    >
+        Delete
+    </button>
+</div>
                                     </div>
                                 </article>
                             ))}
