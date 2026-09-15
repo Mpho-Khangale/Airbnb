@@ -9,6 +9,7 @@ import CreateListing from "./pages/CreateListing";
 import EditListing from "./pages/EditListing";
 import AdminLogin from "./pages/AdminLogin";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import Reservations from "./pages/Reservations";
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     </ProtectedAdminRoute>
                 }
             />
+            <Route path="/reservations" element={<Reservations />} />
         </Routes>
     );
 }
