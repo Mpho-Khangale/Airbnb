@@ -6,7 +6,7 @@ function Home() {
             <Navbar />
 
             <main>
-                {/* Hero Section */}
+
                 <section className="hero-section">
                     <div className="hero-content">
                         <h1>Find your next stay</h1>
@@ -38,7 +38,6 @@ function Home() {
                     </div>
                 </section>
 
-                {/* Inspiration Section */}
                 <section className="home-section">
                     <h2>Inspiration for your next trip</h2>
 
@@ -69,7 +68,6 @@ function Home() {
                     </div>
                 </section>
 
-                {/* Experiences Section */}
                 <section className="home-section">
                     <h2>Discover Airbnb Experiences</h2>
                     <p className="section-description">
@@ -90,3 +88,31 @@ function Home() {
                         </div>
                     </div>
                 </section>
+
+                <section className="shop-section">
+                    <div>
+                        <h2>Shop Airbnb</h2>
+                        <p>
+                            Discover products inspired by travel, design and hospitality.
+                        </p>
+
+                        <button>Explore</button>
+                    </div>
+                </section>
+
+                <section className="home-section">
+                    <h2>Inspiration for future getaways</h2>
+
+                    <div className="future-grid">
+                        <div>Beach destinations</div>
+                        <div>Mountain getaways</div>
+                        <div>City breaks</div>
+                        <div>Weekend escapes</div>
+                    </div>
+                </section>
+            </main>
+        </>
+    );
+}
+
+export default Home;
