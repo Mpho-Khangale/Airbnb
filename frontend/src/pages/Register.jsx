@@ -9,10 +9,13 @@ function Register() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
 
-    const handleSubmit = (event) => {
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
+
         setError("");
 
         if (!username || !email || !password) {
@@ -20,14 +23,44 @@ function Register() {
             return;
         }
 
-        // Backend registration will be connected later.
-        console.log("Register:", {
-            username,
-            email,
-            password
-        });
+        try {
+            setLoading(true);
 
-        navigate("/login");
+            const response = await fetch(
+                "http://localhost:5000/api/users/register",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Registration failed."
+                );
+            }
+
+            console.log("Registered user:", data);
+
+            navigate("/login");
+        } catch (error) {
+            console.error(error);
+
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -38,7 +71,10 @@ function Register() {
                 <div className="auth-card">
                     <div className="auth-heading">
                         <h1>Create an account</h1>
-                        <p>Join Airbnb and start exploring.</p>
+
+                        <p>
+                            Join Airbnb and start exploring.
+                        </p>
                     </div>
 
                     <form onSubmit={handleSubmit}>
@@ -59,7 +95,9 @@ function Register() {
                                 placeholder="Enter your name"
                                 value={username}
                                 onChange={(event) =>
-                                    setUsername(event.target.value)
+                                    setUsername(
+                                        event.target.value
+                                    )
                                 }
                             />
                         </div>
@@ -75,7 +113,9 @@ function Register() {
                                 placeholder="Enter your email"
                                 value={email}
                                 onChange={(event) =>
-                                    setEmail(event.target.value)
+                                    setEmail(
+                                        event.target.value
+                                    )
                                 }
                             />
                         </div>
@@ -91,7 +131,9 @@ function Register() {
                                 placeholder="Create a password"
                                 value={password}
                                 onChange={(event) =>
-                                    setPassword(event.target.value)
+                                    setPassword(
+                                        event.target.value
+                                    )
                                 }
                             />
                         </div>
@@ -99,8 +141,11 @@ function Register() {
                         <button
                             type="submit"
                             className="auth-button"
+                            disabled={loading}
                         >
-                            Sign up
+                            {loading
+                                ? "Creating account..."
+                                : "Sign up"}
                         </button>
                     </form>
 
