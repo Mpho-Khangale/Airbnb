@@ -597,3 +597,254 @@ button {
         gap: 25px;
     }
 }
+
+/* =========================
+   LISTING DETAILS
+========================= */
+
+.listing-page {
+    width: min(1120px, 90%);
+    margin: 0 auto;
+    padding: 40px 0 80px;
+}
+
+.listing-heading h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.listing-subheading {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.image-gallery {
+    height: 450px;
+    margin: 30px 0 50px;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 8px;
+
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.gallery-main {
+    background: #dddddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #717171;
+}
+
+.gallery-small {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.gallery-small div {
+    background: #eeeeee;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #717171;
+    font-size: 13px;
+}
+
+.listing-main {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr);
+    gap: 80px;
+    align-items: start;
+}
+
+.property-summary h2,
+.listing-description h2,
+.amenities h2 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.property-summary p,
+.listing-description p,
+.listing-feature p {
+    color: #717171;
+    line-height: 1.6;
+}
+
+.listing-information hr {
+    border: none;
+    border-top: 1px solid #dddddd;
+    margin: 30px 0;
+}
+
+.listing-feature {
+    margin-bottom: 25px;
+}
+
+.listing-feature h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.amenities-grid {
+    margin-top: 25px;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Booking calculator */
+
+.booking-card {
+    padding: 25px;
+
+    border: 1px solid #dddddd;
+    border-radius: 15px;
+
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+
+    position: sticky;
+    top: 25px;
+}
+
+.booking-price {
+    margin-bottom: 20px;
+}
+
+.booking-price strong {
+    font-size: 22px;
+}
+
+.booking-dates {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    border: 1px solid #aaaaaa;
+    border-radius: 10px 10px 0 0;
+
+    overflow: hidden;
+}
+
+.booking-dates > div {
+    padding: 10px;
+}
+
+.booking-dates > div:first-child {
+    border-right: 1px solid #aaaaaa;
+}
+
+.booking-card label {
+    display: block;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+.booking-card input,
+.booking-card select {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: white;
+
+    font-family: inherit;
+}
+
+.booking-guests {
+    padding: 10px;
+
+    border: 1px solid #aaaaaa;
+    border-top: none;
+
+    border-radius: 0 0 10px 10px;
+}
+
+.reserve-button {
+    width: 100%;
+
+    margin-top: 18px;
+    padding: 14px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #ff385c;
+    color: white;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.booking-message {
+    margin: 15px 0;
+    text-align: center;
+
+    color: #717171;
+    font-size: 13px;
+}
+
+.price-breakdown {
+    margin-top: 20px;
+}
+
+.price-breakdown > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-bottom: 15px;
+
+    font-size: 14px;
+}
+
+.price-breakdown hr {
+    border: none;
+    border-top: 1px solid #dddddd;
+
+    margin: 20px 0;
+}
+
+.booking-total {
+    font-size: 16px !important;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+    .image-gallery {
+        height: auto;
+        grid-template-columns: 1fr;
+    }
+
+    .gallery-main {
+        height: 300px;
+    }
+
+    .gallery-small {
+        display: none;
+    }
+
+    .listing-main {
+        grid-template-columns: 1fr;
+        gap: 50px;
+    }
+
+    .booking-card {
+        position: static;
+    }
+}
