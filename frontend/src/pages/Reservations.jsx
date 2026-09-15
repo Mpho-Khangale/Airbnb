@@ -24,13 +24,13 @@ function Reservations() {
                 setError("");
 
                 const response = await fetch(
-                    "http://localhost:5000/api/reservations",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+    "http://localhost:5000/api/reservations/user",
+    {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+);
 
                 const data = await response.json();
 
@@ -60,6 +60,55 @@ function Reservations() {
             year: "numeric"
         });
     };
+
+    const handleCancel = async (reservationId) => {
+    const confirmed = window.confirm(
+        "Are you sure you want to cancel this reservation?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        navigate("/login");
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `http://localhost:5000/api/reservations/${reservationId}`,
+            {
+                method: "DELETE",
+
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                    "Unable to cancel reservation."
+            );
+        }
+
+        setReservations((currentReservations) =>
+            currentReservations.filter(
+                (reservation) =>
+                    reservation._id !== reservationId
+            )
+        );
+    } catch (error) {
+        console.error(error);
+        setError(error.message);
+    }
+};
 
     return (
         <>
