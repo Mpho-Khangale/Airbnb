@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -10,6 +10,40 @@ function Home() {
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
     const [guests, setGuests] = useState(1);
+
+    const [locations, setLocations] = useState([]);
+    const [locationError, setLocationError] = useState("");
+
+    useEffect(() => {
+    const fetchLocations = async () => {
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/accommodations"
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to load locations.");
+            }
+
+            const accommodations = await response.json();
+
+            const uniqueLocations = [
+                ...new Set(
+                    accommodations
+                        .map((accommodation) => accommodation.location)
+                        .filter(Boolean)
+                )
+            ];
+
+            setLocations(uniqueLocations);
+        } catch (error) {
+            console.error(error);
+            setLocationError("Unable to load locations.");
+        }
+    };
+
+    fetchLocations();
+}, []);
 
     const handleSearch = () => {
         const searchParams = new URLSearchParams({
