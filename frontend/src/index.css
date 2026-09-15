@@ -5,18 +5,23 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     color: #222222;
     background: #ffffff;
 }
 
 button {
     font-family: inherit;
+    cursor: pointer;
 }
 
-.hero-section {
-    min-height: 500px;
-    padding: 80px 5%;
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    min-height: 560px;
+    padding: 70px 5% 90px;
     background: #f7f7f7;
     display: flex;
     flex-direction: column;
@@ -26,107 +31,169 @@ button {
 
 .hero-content {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 45px;
 }
 
 .hero-content h1 {
-    font-size: 48px;
-    margin-bottom: 15px;
+    font-size: 52px;
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    margin-bottom: 18px;
 }
 
 .hero-content p {
     font-size: 18px;
-    color: #666666;
+    color: #717171;
 }
 
-.hero-search {
-    width: min(900px, 95%);
-    display: flex;
-    align-items: center;
-    background: white;
+/* =========================
+   SEARCH BAR
+========================= */
+
+.search-bar {
+    width: min(950px, 100%);
+    min-height: 75px;
+    padding: 8px;
+    background: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 50px;
-    padding: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+
+    display: flex;
+    align-items: center;
 }
 
-.hero-search > div {
+.search-item {
     flex: 1;
-    padding: 10px 20px;
+    min-width: 0;
+    padding: 10px 24px;
     border-right: 1px solid #dddddd;
 }
 
-.hero-search span {
+.search-item span {
     display: block;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
-.hero-search p {
-    margin-top: 5px;
-    color: #777777;
+.search-item p {
+    color: #717171;
     font-size: 14px;
 }
 
-.hero-search button {
+.search-button {
     border: none;
-    border-radius: 50%;
     background: #ff385c;
     color: white;
-    width: 55px;
-    height: 55px;
-    cursor: pointer;
-    font-weight: bold;
+    padding: 15px 25px;
+    border-radius: 35px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 5px;
 }
 
+/* =========================
+   GENERAL SECTIONS
+========================= */
+
 .home-section {
-    padding: 70px 5%;
+    padding: 75px 5%;
 }
 
 .home-section h2 {
-    font-size: 30px;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
     margin-bottom: 30px;
 }
 
 .section-description {
-    color: #666666;
-    margin-top: -20px;
+    color: #717171;
+    margin-top: -15px;
     margin-bottom: 30px;
+    font-size: 16px;
 }
+
+/* =========================
+   DESTINATIONS
+========================= */
 
 .destination-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 24px;
 }
 
 .destination-card {
     cursor: pointer;
 }
 
-.placeholder-image,
-.experience-image {
-    height: 220px;
-    border-radius: 12px;
-    background: #eeeeee;
+.card-image {
+    height: 250px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666666;
-    font-size: 20px;
-    margin-bottom: 12px;
+    align-items: flex-end;
+    padding: 20px;
+
+    background: linear-gradient(
+        135deg,
+        #dddddd,
+        #eeeeee
+    );
+
+    overflow: hidden;
 }
 
-.destination-card h3,
-.experience-card h3 {
+.card-image span {
+    color: white;
+    font-size: 22px;
+    font-weight: 600;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Temporary visual backgrounds.
+   We will replace these with real images later. */
+
+.cape-town {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.35)),
+        linear-gradient(135deg, #7c9db5, #d9a66d);
+}
+
+.johannesburg {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.35)),
+        linear-gradient(135deg, #6e8c62, #d4b16a);
+}
+
+.durban {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.35)),
+        linear-gradient(135deg, #5f9fc2, #e1c27d);
+}
+
+.knysna {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.35)),
+        linear-gradient(135deg, #587b69, #b9c9a4);
+}
+
+.destination-card h3 {
     font-size: 17px;
     margin-bottom: 5px;
 }
 
-.destination-card p,
-.experience-card p {
-    color: #666666;
+.destination-card p {
+    color: #717171;
+    font-size: 14px;
 }
+
+/* =========================
+   EXPERIENCES
+========================= */
 
 .experience-grid {
     display: grid;
@@ -134,111 +201,226 @@ button {
     gap: 25px;
 }
 
-.experience-image {
-    height: 350px;
+.experience-card {
+    overflow: hidden;
 }
+
+.experience-image {
+    height: 380px;
+    border-radius: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(135deg, #444444, #999999);
+}
+
+.experience-image span {
+    color: white;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.experiences {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.4)),
+        linear-gradient(135deg, #6d8fa3, #c9a27d);
+}
+
+.adventures {
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.4)),
+        linear-gradient(135deg, #637b5b, #8f9b73);
+}
+
+.experience-content {
+    padding-top: 15px;
+}
+
+.experience-content h3 {
+    font-size: 18px;
+    margin-bottom: 6px;
+}
+
+.experience-content p {
+    color: #717171;
+}
+
+/* =========================
+   SHOP
+========================= */
 
 .shop-section {
     margin: 20px 5%;
-    min-height: 350px;
-    border-radius: 20px;
+    min-height: 390px;
+    border-radius: 24px;
     background: #f7f7f7;
-    padding: 60px;
+
     display: flex;
     align-items: center;
+
+    padding: 70px;
 }
 
-.shop-section h2 {
-    font-size: 36px;
-    margin-bottom: 15px;
+.shop-content {
+    max-width: 520px;
 }
 
-.shop-section p {
-    color: #666666;
-    margin-bottom: 25px;
+.shop-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
 }
 
-.shop-section button {
-    padding: 13px 25px;
+.shop-content h2 {
+    font-size: 40px;
+    line-height: 1.1;
+    margin: 18px 0;
+}
+
+.shop-content p {
+    color: #717171;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.shop-content button {
     border: none;
-    border-radius: 8px;
     background: #222222;
     color: white;
-    cursor: pointer;
+    padding: 14px 25px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
 }
+
+/* =========================
+   FUTURE GETAWAYS
+========================= */
 
 .future-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+    gap: 16px;
 }
 
 .future-grid div {
-    padding: 35px 20px;
+    min-height: 150px;
+    padding: 25px;
+
     border: 1px solid #dddddd;
-    border-radius: 12px;
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-@media (max-width: 768px) {
-    .navbar {
-        padding: 0 20px;
+.future-grid h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+}
+
+.future-grid p {
+    color: #717171;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 900px) {
+    .destination-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .navbar-links,
-    .host-button {
-        display: none;
+    .future-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .hero-section {
+    .hero-content h1 {
+        font-size: 42px;
+    }
+
+    .search-bar {
+        border-radius: 25px;
+    }
+
+    .search-item {
+        padding: 10px 15px;
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 650px) {
+    .hero {
         padding: 50px 20px;
     }
 
     .hero-content h1 {
-        font-size: 36px;
+        font-size: 34px;
     }
 
-    .hero-search {
+    .hero-content p {
+        font-size: 16px;
+    }
+
+    .search-bar {
         flex-direction: column;
+        width: 100%;
+        padding: 12px;
         border-radius: 20px;
-        padding: 15px;
     }
 
-    .hero-search > div {
+    .search-item {
         width: 100%;
+        padding: 14px 10px;
         border-right: none;
         border-bottom: 1px solid #eeeeee;
     }
 
-    .hero-search button {
-        margin-top: 10px;
-        border-radius: 30px;
+    .search-button {
         width: 100%;
+        margin: 10px 0 0;
+    }
+
+    .home-section {
+        padding: 50px 20px;
+    }
+
+    .home-section h2 {
+        font-size: 27px;
     }
 
     .destination-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
     }
 
     .experience-grid {
         grid-template-columns: 1fr;
     }
 
+    .experience-image {
+        height: 280px;
+    }
+
     .future-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
     }
 
     .shop-section {
-        margin: 20px;
-        padding: 35px;
-    }
-}
-
-@media (max-width: 480px) {
-    .destination-grid {
-        grid-template-columns: 1fr;
+        margin: 10px 20px;
+        padding: 40px 30px;
     }
 
-    .future-grid {
-        grid-template-columns: 1fr;
+    .shop-content h2 {
+        font-size: 32px;
     }
 }
