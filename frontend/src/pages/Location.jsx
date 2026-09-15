@@ -6,68 +6,54 @@ import Footer from "../components/Footer";
 function Location() {
     const [searchParams] = useSearchParams();
 
-    const location = searchParams.get("location") || "South Africa";
-    const checkIn = searchParams.get("checkIn");
-    const checkOut = searchParams.get("checkOut");
-    const guests = searchParams.get("guests") || "1";
+    const location = searchParams.get("location") || "";
+    const checkIn = searchParams.get("checkIn") || "";
+    const checkOut = searchParams.get("checkOut") || "";
+    const guests = Number(searchParams.get("guests")) || 1;
 
-    const listings = [
-        {
-            id: 1,
-            title: "Modern apartment with city views",
-            location: "Cape Town",
-            type: "Entire apartment",
-            guests: 4,
-            bedrooms: 2,
-            bathrooms: 2,
-            rating: 4.8,
-            price: 1450
-        },
-        {
-            id: 2,
-            title: "Luxury home near the beach",
-            location: "Cape Town",
-            type: "Entire home",
-            guests: 6,
-            bedrooms: 3,
-            bathrooms: 2,
-            rating: 4.9,
-            price: 2300
-        },
-        {
-            id: 3,
-            title: "Stylish city apartment",
-            location: "Johannesburg",
-            type: "Entire apartment",
-            guests: 2,
-            bedrooms: 1,
-            bathrooms: 1,
-            rating: 4.7,
-            price: 1100
-        },
-        {
-            id: 4,
-            title: "Relaxing coastal stay",
-            location: "Durban",
-            type: "Entire apartment",
-            guests: 4,
-            bedrooms: 2,
-            bathrooms: 1,
-            rating: 4.6,
-            price: 1250
-        }
-    ];
+    const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchListings = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const response = await fetch(
+                    "http://localhost:5000/api/accommodations"
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to load accommodations.");
+                }
+
+                const data = await response.json();
+
+                setListings(data);
+            } catch (error) {
+                console.error(error);
+                setError(
+                    "Unable to load accommodations. Please try again."
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchListings();
+    }, []);
 
     const filteredListings = listings.filter((listing) => {
         const matchesLocation =
             !location ||
-            location === "South Africa" ||
             listing.location
-                .toLowerCase()
+                ?.toLowerCase()
                 .includes(location.toLowerCase());
 
         const matchesGuests =
-            listing.guests >= Number(guests);
+            Number(listing.guests) >= guests;
 
         return matchesLocation && matchesGuests;
     });
@@ -77,16 +63,25 @@ function Location() {
             <Navbar />
 
             <main className="location-page">
-
                 <section className="location-heading">
-                    <p>
-                        {filteredListings.length} stays
-                        {checkIn && checkOut
-                            ? ` · ${checkIn} - ${checkOut}`
-                            : ""}
-                    </p>
+                    {!loading && !error && (
+                        <p>
+                            {filteredListings.length}{" "}
+                            {filteredListings.length === 1
+                                ? "stay"
+                                : "stays"}
 
-                    <h1>Stays in {location}</h1>
+                            {checkIn && checkOut
+                                ? ` · ${checkIn} - ${checkOut}`
+                                : ""}
+                        </p>
+                    )}
+
+                    <h1>
+                        {location
+                            ? `Stays in ${location}`
+                            : "Available stays"}
+                    </h1>
                 </section>
 
                 <section className="filter-buttons">
@@ -96,61 +91,93 @@ function Location() {
                     <button>Amenities</button>
                 </section>
 
-                <section className="location-results">
+                {loading && (
+                    <div className="location-message">
+                        <p>Loading accommodations...</p>
+                    </div>
+                )}
 
-                    {filteredListings.length > 0 ? (
-                        filteredListings.map((listing) => (
-                            <Link
-                                to={`/listing/${listing.id}`}
-                                className="location-card"
-                                key={listing.id}
-                            >
-                                <div className="location-card-image">
-                                    Property image
-                                </div>
+                {error && (
+                    <div className="location-message error-message">
+                        <h2>Something went wrong</h2>
+                        <p>{error}</p>
+                    </div>
+                )}
 
-                                <div className="location-card-content">
-                                    <div>
-                                        <p className="listing-type">
-                                            {listing.type} in {listing.location}
-                                        </p>
-
-                                        <h2>{listing.title}</h2>
-
-                                        <div className="listing-line"></div>
-
-                                        <p className="listing-details">
-                                            {listing.guests} guests ·{" "}
-                                            {listing.bedrooms} bedrooms ·{" "}
-                                            {listing.bathrooms} bathrooms
-                                        </p>
+                {!loading && !error && (
+                    <section className="location-results">
+                        {filteredListings.length > 0 ? (
+                            filteredListings.map((listing) => (
+                                <Link
+                                    to={`/listing/${listing._id}`}
+                                    className="location-card"
+                                    key={listing._id}
+                                >
+                                    <div className="location-card-image">
+                                        {listing.images &&
+                                        listing.images.length > 0 ? (
+                                            <img
+                                                src={listing.images[0]}
+                                                alt={listing.title}
+                                            />
+                                        ) : (
+                                            <span>
+                                                Property image
+                                            </span>
+                                        )}
                                     </div>
 
-                                    <div className="listing-bottom">
-                                        <span>★ {listing.rating}</span>
+                                    <div className="location-card-content">
+                                        <div>
+                                            <p className="listing-type">
+                                                {listing.type} in{" "}
+                                                {listing.location}
+                                            </p>
 
-                                        <p>
-                                            <strong>
-                                                R{listing.price.toLocaleString()}
-                                            </strong>{" "}
-                                            / night
-                                        </p>
+                                            <h2>
+                                                {listing.title}
+                                            </h2>
+
+                                            <div className="listing-line"></div>
+
+                                            <p className="listing-details">
+                                                {listing.guests} guests ·{" "}
+                                                {listing.bedrooms} bedrooms ·{" "}
+                                                {listing.bathrooms} bathrooms
+                                            </p>
+                                        </div>
+
+                                        <div className="listing-bottom">
+                                            <span>
+                                                ★{" "}
+                                                {listing.rating || "New"}
+                                            </span>
+
+                                            <p>
+                                                <strong>
+                                                    R
+                                                    {Number(
+                                                        listing.price
+                                                    ).toLocaleString()}
+                                                </strong>{" "}
+                                                / night
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        ))
-                    ) : (
-                        <div className="no-results">
-                            <h2>No stays found</h2>
-                            <p>
-                                Try searching for another location or changing
-                                the number of guests.
-                            </p>
-                        </div>
-                    )}
+                                </Link>
+                            ))
+                        ) : (
+                            <div className="no-results">
+                                <h2>No stays found</h2>
 
-                </section>
-
+                                <p>
+                                    There are currently no properties
+                                    matching your search.
+                                </p>
+                            </div>
+                        )}
+                    </section>
+                )}
             </main>
 
             <Footer />
