@@ -57,3 +57,74 @@
 .profile-button span {
     font-size: 18px;
 }
+
+.profile-container {
+    position: relative;
+}
+
+.profile-menu {
+    position: absolute;
+    top: 55px;
+    right: 0;
+
+    width: 230px;
+    padding: 8px 0;
+
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+
+    background: white;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+
+    z-index: 1000;
+}
+
+.profile-menu a,
+.menu-logout {
+    width: 100%;
+    padding: 12px 16px;
+
+    display: block;
+
+    border: none;
+    background: transparent;
+
+    color: #222222;
+
+    text-align: left;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+.profile-menu a:hover,
+.menu-logout:hover {
+    background: #f7f7f7;
+}
+
+.profile-user {
+    padding: 12px 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.profile-user strong {
+    font-size: 14px;
+}
+
+.profile-user span {
+    color: #717171;
+    font-size: 12px;
+}
+
+.menu-logout {
+    border-top: 1px solid #eeeeee;
+}
