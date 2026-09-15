@@ -1,10 +1,18 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import {
+    Link,
+    useLocation,
+    useNavigate
+} from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
     const navigate = useNavigate();
+    const currentLocation = useLocation();
+
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const menuRef = useRef(null);
 
     const storedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
@@ -19,6 +27,35 @@ function Navbar() {
         }
     }
 
+    // Close profile menu when clicking outside it
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(event.target)
+            ) {
+                setMenuOpen(false);
+            }
+        };
+
+        document.addEventListener(
+            "mousedown",
+            handleOutsideClick
+        );
+
+        return () => {
+            document.removeEventListener(
+                "mousedown",
+                handleOutsideClick
+            );
+        };
+    }, []);
+
+    // Close menu when route changes
+    useEffect(() => {
+        setMenuOpen(false);
+    }, [currentLocation.pathname]);
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
@@ -26,103 +63,180 @@ function Navbar() {
         setMenuOpen(false);
 
         navigate("/");
+
         window.location.reload();
+    };
+
+    const handleExperiencesClick = () => {
+        setMenuOpen(false);
+
+        if (currentLocation.pathname !== "/") {
+            navigate("/");
+
+            setTimeout(() => {
+                document
+                    .getElementById("experiences")
+                    ?.scrollIntoView({
+                        behavior: "smooth"
+                    });
+            }, 100);
+
+            return;
+        }
+
+        document
+            .getElementById("experiences")
+            ?.scrollIntoView({
+                behavior: "smooth"
+            });
     };
 
     return (
         <header className="navbar">
-            <Link to="/" className="navbar-logo">
-                airbnb
-            </Link>
+            <div className="navbar-inner">
 
-            <nav className="navbar-links">
-                <Link to="/">Stays</Link>
-                <a href="/#experiences">Experiences</a>
-            </nav>
-
-            <div className="navbar-right">
+                {/* Logo */}
                 <Link
-                    to="/admin/login"
-                    className="host-button"
+                    to="/"
+                    className="navbar-logo"
+                    aria-label="Airbnb home"
                 >
-                    Airbnb your home
+                    <span className="navbar-logo-icon">
+                        ◇
+                    </span>
+
+                    <span className="navbar-logo-text">
+                        airbnb
+                    </span>
                 </Link>
 
-                <div className="profile-container">
-                    <button
-                        className="profile-button"
-                        onClick={() =>
-                            setMenuOpen(!menuOpen)
+                {/* Main navigation */}
+                <nav
+                    className="navbar-links"
+                    aria-label="Main navigation"
+                >
+                    <Link
+                        to="/"
+                        className={
+                            currentLocation.pathname === "/"
+                                ? "navbar-link active"
+                                : "navbar-link"
                         }
                     >
-                        ☰
-                        <span>●</span>
+                        Stays
+                    </Link>
+
+                    <button
+                        type="button"
+                        className="navbar-link navbar-link-button"
+                        onClick={handleExperiencesClick}
+                    >
+                        Experiences
                     </button>
+                </nav>
 
-                    {menuOpen && (
-                        <div className="profile-menu">
-                            {user ? (
-                                <>
-                                    <div className="profile-user">
-                                        <strong>
-                                            {user.username}
-                                        </strong>
+                {/* Right navigation */}
+                <div className="navbar-right">
+                    <Link
+                        to="/admin/login"
+                        className="host-button"
+                    >
+                        Airbnb your home
+                    </Link>
 
-                                        <span>
-                                            {user.email}
-                                        </span>
-                                    </div>
+                    <div
+                        className="profile-container"
+                        ref={menuRef}
+                    >
+                        <button
+                            type="button"
+                            className="profile-button"
+                            onClick={() =>
+                                setMenuOpen(
+                                    (current) => !current
+                                )
+                            }
+                            aria-expanded={menuOpen}
+                            aria-label="Open profile menu"
+                        >
+                            <span className="menu-icon">
+                                ☰
+                            </span>
 
-                                    <Link
-                                        to="/reservations"
-                                        onClick={() =>
-                                            setMenuOpen(false)
-                                        }
-                                    >
-                                        My reservations
-                                    </Link>
+                            <span className="profile-icon">
+                                ●
+                            </span>
+                        </button>
 
-                                    {user.role === "admin" && (
+                        {menuOpen && (
+                            <div className="profile-menu">
+
+                                {user ? (
+                                    <>
+                                        <div className="profile-user">
+                                            <strong>
+                                                {user.username ||
+                                                    "User"}
+                                            </strong>
+
+                                            <span>
+                                                {user.email}
+                                            </span>
+                                        </div>
+
                                         <Link
-                                            to="/admin/listings"
-                                            onClick={() =>
-                                                setMenuOpen(false)
+                                            to="/reservations"
+                                        >
+                                            My reservations
+                                        </Link>
+
+                                        {user.role ===
+                                            "admin" && (
+                                            <Link to="/admin/listings">
+                                                Admin dashboard
+                                            </Link>
+                                        )}
+
+                                        <div className="profile-menu-divider" />
+
+                                        <Link to="/">
+                                            Explore stays
+                                        </Link>
+
+                                        <button
+                                            type="button"
+                                            className="menu-logout"
+                                            onClick={
+                                                handleLogout
                                             }
                                         >
-                                            Admin dashboard
+                                            Log out
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link
+                                            to="/login"
+                                            className="profile-login"
+                                        >
+                                            Log in
                                         </Link>
-                                    )}
 
-                                    <button
-                                        className="menu-logout"
-                                        onClick={handleLogout}
-                                    >
-                                        Log out
-                                    </button>
-                                </>
-                            ) : (
-                                <>
-                                    <Link
-                                        to="/login"
-                                        onClick={() =>
-                                            setMenuOpen(false)
-                                        }
-                                    >
-                                        Log in
-                                    </Link>
+                                        <Link to="/register">
+                                            Sign up
+                                        </Link>
 
-                                    <Link
-                                        to="/register"
-                                        onClick={() =>
-                                            setMenuOpen(false)
-                                        }
-                                    >
-                                        Sign up
-                                    </Link>
-                                </>
-                            )}
-                        </div>
-                    )}
+                                        <div className="profile-menu-divider" />
+
+                                        <Link to="/admin/login">
+                                            Airbnb your home
+                                        </Link>
+                                    </>
+                                )}
+
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </header>
