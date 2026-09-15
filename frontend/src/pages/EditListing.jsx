@@ -6,68 +6,82 @@ function EditListing() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    const sampleListings = [
-        {
-            id: 1,
-            title: "Modern apartment with city views",
-            location: "Cape Town",
-            description:
-                "A modern apartment with beautiful views of the city.",
-            type: "Entire apartment",
-            bedrooms: 2,
-            bathrooms: 2,
-            guests: 4,
-            price: 1450,
-            cleaningFee: 350,
-            serviceFee: 250,
-            amenities: "Wi-Fi, Kitchen, Parking, TV",
-            images: ""
-        },
-        {
-            id: 2,
-            title: "Luxury home near the beach",
-            location: "Cape Town",
-            description:
-                "A luxury home located close to the beach.",
-            type: "Entire home",
-            bedrooms: 3,
-            bathrooms: 2,
-            guests: 6,
-            price: 2300,
-            cleaningFee: 450,
-            serviceFee: 320,
-            amenities: "Wi-Fi, Kitchen, Parking, TV, Pool",
-            images: ""
-        },
-        {
-            id: 3,
-            title: "Stylish city apartment",
-            location: "Johannesburg",
-            description:
-                "A stylish apartment in the heart of the city.",
-            type: "Entire apartment",
-            bedrooms: 1,
-            bathrooms: 1,
-            guests: 2,
-            price: 1100,
-            cleaningFee: 250,
-            serviceFee: 180,
-            amenities: "Wi-Fi, Kitchen, TV",
-            images: ""
-        }
-    ];
-
-    const selectedListing =
-        sampleListings.find(
-            (listing) => listing.id === Number(id)
-        ) || sampleListings[0];
-
     const [formData, setFormData] = useState({
-        ...selectedListing
+        title: "",
+        location: "",
+        description: "",
+        type: "",
+        bedrooms: 1,
+        bathrooms: 1,
+        guests: 1,
+        price: "",
+        cleaningFee: "",
+        serviceFee: "",
+        amenities: "",
+        images: ""
     });
 
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+
+    // Load the selected listing from MongoDB
+    useEffect(() => {
+        const fetchListing = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const response = await fetch(
+                    `http://localhost:5000/api/accommodations/${id}`
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                            "Unable to load listing."
+                    );
+                }
+
+                setFormData({
+                    title: data.title || "",
+                    location: data.location || "",
+                    description: data.description || "",
+                    type: data.type || "",
+
+                    bedrooms: data.bedrooms ?? 1,
+                    bathrooms: data.bathrooms ?? 1,
+                    guests: data.guests ?? 1,
+
+                    price: data.price ?? "",
+                    cleaningFee:
+                        data.cleaningFee ?? "",
+                    serviceFee:
+                        data.serviceFee ?? "",
+
+                    amenities: Array.isArray(
+                        data.amenities
+                    )
+                        ? data.amenities.join(", ")
+                        : "",
+
+                    images: Array.isArray(data.images)
+                        ? data.images[0] || ""
+                        : ""
+                });
+            } catch (error) {
+                console.error(error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchListing();
+    }, [id]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -78,7 +92,8 @@ function EditListing() {
         }));
     };
 
-    const handleSubmit = (event) => {
+    // Update listing in MongoDB
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         setError("");
@@ -91,20 +106,122 @@ function EditListing() {
             !formData.type ||
             !formData.price
         ) {
-            setError("Please complete all required fields.");
+            setError(
+                "Please complete all required fields."
+            );
             return;
         }
 
-        console.log("Updated listing:", formData);
+        const token =
+            localStorage.getItem("adminToken");
 
-        setSuccess("Listing updated successfully.");
+        if (!token) {
+            navigate("/admin/login");
+            return;
+        }
 
-        // PUT request to backend will be added later.
+        const updatedListing = {
+            title: formData.title.trim(),
 
-        setTimeout(() => {
-            navigate("/admin/listings");
-        }, 1000);
+            location: formData.location.trim(),
+
+            description:
+                formData.description.trim(),
+
+            type: formData.type,
+
+            bedrooms: Number(
+                formData.bedrooms
+            ),
+
+            bathrooms: Number(
+                formData.bathrooms
+            ),
+
+            guests: Number(formData.guests),
+
+            price: Number(formData.price),
+
+            cleaningFee:
+                Number(formData.cleaningFee) || 0,
+
+            serviceFee:
+                Number(formData.serviceFee) || 0,
+
+            amenities: formData.amenities
+                .split(",")
+                .map((amenity) =>
+                    amenity.trim()
+                )
+                .filter(Boolean),
+
+            images: formData.images.trim()
+                ? [formData.images.trim()]
+                : []
+        };
+
+        try {
+            setSaving(true);
+
+            const response = await fetch(
+                `http://localhost:5000/api/accommodations/${id}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json",
+
+                        Authorization:
+                            `Bearer ${token}`
+                    },
+
+                    body: JSON.stringify(
+                        updatedListing
+                    )
+                }
+            );
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                        "Unable to update listing."
+                );
+            }
+
+            setSuccess(
+                "Listing updated successfully."
+            );
+
+            setTimeout(() => {
+                navigate("/admin/listings");
+            }, 800);
+        } catch (error) {
+            console.error(error);
+            setError(error.message);
+        } finally {
+            setSaving(false);
+        }
     };
+
+    if (loading) {
+        return (
+            <>
+                <AdminNavbar />
+
+                <main className="admin-page">
+                    <div className="admin-message">
+                        <p>
+                            Loading listing...
+                        </p>
+                    </div>
+                </main>
+            </>
+        );
+    }
 
     return (
         <>
@@ -113,8 +230,10 @@ function EditListing() {
             <main className="admin-page">
                 <div className="admin-form-heading">
                     <h1>Update Listing</h1>
+
                     <p>
-                        Edit the information for this property.
+                        Edit the information for this
+                        property.
                     </p>
                 </div>
 
@@ -171,7 +290,9 @@ function EditListing() {
                             id="edit-description"
                             name="description"
                             rows="6"
-                            value={formData.description}
+                            value={
+                                formData.description
+                            }
                             onChange={handleChange}
                         />
                     </div>
@@ -187,6 +308,10 @@ function EditListing() {
                             value={formData.type}
                             onChange={handleChange}
                         >
+                            <option value="">
+                                Select property type
+                            </option>
+
                             <option value="Entire apartment">
                                 Entire apartment
                             </option>
@@ -216,8 +341,12 @@ function EditListing() {
                                 name="guests"
                                 type="number"
                                 min="1"
-                                value={formData.guests}
-                                onChange={handleChange}
+                                value={
+                                    formData.guests
+                                }
+                                onChange={
+                                    handleChange
+                                }
                             />
                         </div>
 
@@ -231,8 +360,12 @@ function EditListing() {
                                 name="bedrooms"
                                 type="number"
                                 min="0"
-                                value={formData.bedrooms}
-                                onChange={handleChange}
+                                value={
+                                    formData.bedrooms
+                                }
+                                onChange={
+                                    handleChange
+                                }
                             />
                         </div>
 
@@ -246,8 +379,12 @@ function EditListing() {
                                 name="bathrooms"
                                 type="number"
                                 min="0"
-                                value={formData.bathrooms}
-                                onChange={handleChange}
+                                value={
+                                    formData.bathrooms
+                                }
+                                onChange={
+                                    handleChange
+                                }
                             />
                         </div>
                     </div>
@@ -263,8 +400,12 @@ function EditListing() {
                                 name="price"
                                 type="number"
                                 min="0"
-                                value={formData.price}
-                                onChange={handleChange}
+                                value={
+                                    formData.price
+                                }
+                                onChange={
+                                    handleChange
+                                }
                             />
                         </div>
 
@@ -278,8 +419,12 @@ function EditListing() {
                                 name="cleaningFee"
                                 type="number"
                                 min="0"
-                                value={formData.cleaningFee}
-                                onChange={handleChange}
+                                value={
+                                    formData.cleaningFee
+                                }
+                                onChange={
+                                    handleChange
+                                }
                             />
                         </div>
 
@@ -293,8 +438,12 @@ function EditListing() {
                                 name="serviceFee"
                                 type="number"
                                 min="0"
-                                value={formData.serviceFee}
-                                onChange={handleChange}
+                                value={
+                                    formData.serviceFee
+                                }
+                                onChange={
+                                    handleChange
+                                }
                             />
                         </div>
                     </div>
@@ -308,12 +457,16 @@ function EditListing() {
                             id="edit-amenities"
                             name="amenities"
                             type="text"
-                            value={formData.amenities}
+                            placeholder="Wi-Fi, Kitchen, Parking, TV"
+                            value={
+                                formData.amenities
+                            }
                             onChange={handleChange}
                         />
 
                         <small>
-                            Separate amenities with commas.
+                            Separate amenities with
+                            commas.
                         </small>
                     </div>
 
@@ -337,7 +490,9 @@ function EditListing() {
                             type="button"
                             className="cancel-button"
                             onClick={() =>
-                                navigate("/admin/listings")
+                                navigate(
+                                    "/admin/listings"
+                                )
                             }
                         >
                             Cancel
@@ -346,8 +501,11 @@ function EditListing() {
                         <button
                             type="submit"
                             className="admin-primary-button form-submit"
+                            disabled={saving}
                         >
-                            Save Changes
+                            {saving
+                                ? "Saving..."
+                                : "Save Changes"}
                         </button>
                     </div>
                 </form>
