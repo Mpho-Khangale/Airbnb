@@ -46,6 +46,13 @@ function Home() {
 }, []);
 
     const handleSearch = () => {
+        if (!location) {
+           setLocationError("Please select a destination.");
+         return;
+        }
+
+         setLocationError("");
+
         const searchParams = new URLSearchParams({
             location,
             checkIn,
