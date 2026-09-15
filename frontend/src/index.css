@@ -87,3 +87,19 @@ button {
     font-size: 30px;
     margin-bottom: 30px;
 }
+
+.section-description {
+    color: #666666;
+    margin-top: -20px;
+    margin-bottom: 30px;
+}
+
+.destination-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.destination-card {
+    cursor: pointer;
+}
