@@ -13,3 +13,77 @@ body {
 button {
     font-family: inherit;
 }
+
+.hero-section {
+    min-height: 500px;
+    padding: 80px 5%;
+    background: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: #666666;
+}
+
+.hero-search {
+    width: min(900px, 95%);
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #dddddd;
+    border-radius: 50px;
+    padding: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.hero-search > div {
+    flex: 1;
+    padding: 10px 20px;
+    border-right: 1px solid #dddddd;
+}
+
+.hero-search span {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.hero-search p {
+    margin-top: 5px;
+    color: #777777;
+    font-size: 14px;
+}
+
+.hero-search button {
+    border: none;
+    border-radius: 50%;
+    background: #ff385c;
+    color: white;
+    width: 55px;
+    height: 55px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.home-section {
+    padding: 70px 5%;
+}
+
+.home-section h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
