@@ -7,6 +7,8 @@ import Register from "./pages/Register";
 import AdminListings from "./pages/AdminListings";
 import CreateListing from "./pages/CreateListing";
 import EditListing from "./pages/EditListing";
+import AdminLogin from "./pages/AdminLogin";
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 
 function App() {
     return (
@@ -19,6 +21,13 @@ function App() {
             <Route path="/admin/listings" element={<AdminListings />} />
             <Route path="/admin/create-listing" element={<CreateListing />} />
             <Route path="/admin/edit-listing/:id" element={<EditListing />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/listings" element={
+                    <ProtectedAdminRoute>
+                        <AdminListings />
+                    </ProtectedAdminRoute>
+                }
+            />
         </Routes>
     );
 }
