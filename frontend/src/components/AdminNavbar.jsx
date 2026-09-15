@@ -24,6 +24,8 @@ function AdminNavbar() {
 
                 <Link to="/admin/create-listing"> Create Listing </Link>
 
+                <Link to="/admin/reservations"> Reservations </Link>
+
                 <Link to="/"> View Website </Link>
             </nav>
 
