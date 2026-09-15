@@ -10,18 +10,24 @@ function Navbar() {
 
             <nav className="navbar-links">
                 <Link to="/">Stays</Link>
-                <Link to="/">Experiences</Link>
+                <a href="#experiences">Experiences</a>
             </nav>
 
             <div className="navbar-right">
-                <button className="host-button">
+                <Link
+                    to="/admin/login"
+                    className="host-button"
+                >
                     Airbnb your home
-                </button>
+                </Link>
 
-                <button className="profile-button">
+                <Link
+                    to="/login"
+                    className="profile-button"
+                >
                     ☰
                     <span>●</span>
-                </button>
+                </Link>
             </div>
         </header>
     );
