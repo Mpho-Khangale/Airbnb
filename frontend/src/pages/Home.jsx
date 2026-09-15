@@ -4,6 +4,28 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function Home() {
+    const navigate = useNavigate();
+
+    const [location, setLocation] = useState("");
+    const [checkIn, setCheckIn] = useState("");
+    const [checkOut, setCheckOut] = useState("");
+    const [guests, setGuests] = useState(1);
+
+    const handleSearch = () => {
+        const searchParams = new URLSearchParams({
+            location,
+            checkIn,
+            checkOut,
+            guests
+        });
+
+        navigate(`/location?${searchParams.toString()}`);
+    };
+    
+
+
+
+
     return (
         <>
             <Navbar />
@@ -16,29 +38,68 @@ function Home() {
                         <p>Discover homes and experiences around the world.</p>
                     </div>
 
-                    <div className="search-bar">
-                        <div className="search-item">
-                            <span>Where</span>
-                            <p>Search destinations</p>
-                        </div>
+<div className="search-bar">
 
-                        <div className="search-item">
-                            <span>Check in</span>
-                            <p>Add dates</p>
-                        </div>
+    <div className="search-item">
+        <label htmlFor="location">Where</label>
+        <input
+            id="location"
+            type="text"
+            placeholder="Search destinations"
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+        />
+    </div>
 
-                        <div className="search-item">
-                            <span>Check out</span>
-                            <p>Add dates</p>
-                        </div>
+    <div className="search-item">
+        <label htmlFor="checkIn">Check in</label>
+        <input
+            id="checkIn"
+            type="date"
+            value={checkIn}
+            onChange={(event) => setCheckIn(event.target.value)}
+        />
+    </div>
 
-                        <div className="search-item">
-                            <span>Guests</span>
-                            <p>Add guests</p>
-                        </div>
+    <div className="search-item">
+        <label htmlFor="checkOut">Check out</label>
+        <input
+            id="checkOut"
+            type="date"
+            value={checkOut}
+            min={checkIn}
+            onChange={(event) => setCheckOut(event.target.value)}
+        />
+    </div>
 
-                        <button className="search-button">Search</button>
-                    </div>
+    <div className="search-item">
+        <label htmlFor="guests">Guests</label>
+        <select
+            id="guests"
+            value={guests}
+            onChange={(event) => setGuests(event.target.value)}
+        >
+            <option value="1">1 guest</option>
+            <option value="2">2 guests</option>
+            <option value="3">3 guests</option>
+            <option value="4">4 guests</option>
+            <option value="5">5 guests</option>
+            <option value="6">6 guests</option>
+            <option value="7">7 guests</option>
+            <option value="8">8 guests</option>
+            <option value="9">9 guests</option>
+            <option value="10">10 guests</option>
+        </select>
+    </div>
+
+    <button
+        className="search-button"
+        onClick={handleSearch}
+    >
+        Search
+    </button>
+
+</div>
                 </section>
 
                 {/* Inspiration */}
