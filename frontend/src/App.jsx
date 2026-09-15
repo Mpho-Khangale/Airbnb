@@ -10,6 +10,7 @@ import EditListing from "./pages/EditListing";
 import AdminLogin from "./pages/AdminLogin";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import Reservations from "./pages/Reservations";
+import AdminReservations from "./pages/AdminReservations";
 
 function App() {
     return (
@@ -28,6 +29,12 @@ function App() {
                         <AdminListings />
                     </ProtectedAdminRoute>
                 }
+            />
+            <Route path="/admin/reservations" element={
+                    <ProtectedAdminRoute>
+                    <AdminReservations />
+                    </ProtectedAdminRoute>
+              }
             />
             <Route path="/reservations" element={<Reservations />} />
         </Routes>
