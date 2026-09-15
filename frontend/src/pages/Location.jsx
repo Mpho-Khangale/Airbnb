@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import API_URL from "../api";
 
 function Location() {
     const [searchParams] = useSearchParams();
@@ -28,7 +29,7 @@ function Location() {
                 setError("");
 
                 const response = await fetch(
-                    "http://localhost:5000/api/accommodations"
+                    `${API_URL}/api/accommodations`
                 );
 
                 if (!response.ok) {

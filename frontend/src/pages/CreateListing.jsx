@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminNavbar from "../components/AdminNavbar";
+import API_URL from "../api";
 
 function CreateListing() {
     const navigate = useNavigate();
@@ -125,7 +126,7 @@ function CreateListing() {
             setLoading(true);
 
             const response = await fetch(
-                "http://localhost:5000/api/accommodations",
+                `${API_URL}/api/accommodations`,
                 {
                     method: "POST",
 

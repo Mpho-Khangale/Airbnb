@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import API_URL from "../api";
 
 function ListingDetails() {
     const { id } = useParams();
@@ -25,7 +26,7 @@ function ListingDetails() {
                 setError("");
 
                 const response = await fetch(
-                    `http://localhost:5000/api/accommodations/${id}`
+                    `${API_URL}/api/accommodations/${id}`
                 );
 
                 if (!response.ok) {
@@ -98,7 +99,7 @@ function ListingDetails() {
         setReserving(true);
 
         const response = await fetch(
-            "http://localhost:5000/api/reservations",
+            `${API_URL}/api/reservations`,
             {
                 method: "POST",
 

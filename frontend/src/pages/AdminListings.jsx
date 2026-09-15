@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AdminNavbar from "../components/AdminNavbar";
+import API_URL from "../api";
 
 function AdminListings() {
     const [listings, setListings] = useState([]);
@@ -14,7 +15,7 @@ function AdminListings() {
                 setError("");
 
                 const response = await fetch(
-                    "http://localhost:5000/api/accommodations"
+                    `${API_URL}/api/accommodations`
                 );
 
                 const data = await response.json();
@@ -58,7 +59,7 @@ function AdminListings() {
 
     try {
         const response = await fetch(
-            `http://localhost:5000/api/accommodations/${listingId}`,
+            `${API_URL}/api/accommodations/${listingId}`,
             {
                 method: "DELETE",
 

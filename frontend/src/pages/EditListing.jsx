@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AdminNavbar from "../components/AdminNavbar";
+import API_URL from "../api";
 
 function EditListing() {
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ function EditListing() {
                 setError("");
 
                 const response = await fetch(
-                    `http://localhost:5000/api/accommodations/${id}`
+                    `${API_URL}/api/accommodations/${id}`
                 );
 
                 const data = await response.json();
@@ -223,7 +224,7 @@ function EditListing() {
 
             const response =
                 await fetch(
-                    `http://localhost:5000/api/accommodations/${id}`,
+                    `${API_URL}/api/accommodations/${id}`,
                     {
                         method: "PUT",
 

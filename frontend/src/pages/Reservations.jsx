@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import API_URL from "../api";
 
 function Reservations() {
     const navigate = useNavigate();
@@ -24,12 +25,12 @@ function Reservations() {
                 setError("");
 
                 const response = await fetch(
-    "http://localhost:5000/api/reservations/user",
-    {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
+                    `${API_URL}/api/reservations/user`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
 );
 
                 const data = await response.json();
@@ -79,7 +80,7 @@ function Reservations() {
 
     try {
         const response = await fetch(
-            `http://localhost:5000/api/reservations/${reservationId}`,
+            `${API_URL}/api/reservations/${reservationId}`,
             {
                 method: "DELETE",
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AdminNavbar from "../components/AdminNavbar";
+import API_URL from "../api";
+
 
 function AdminReservations() {
     const navigate = useNavigate();
@@ -23,7 +25,7 @@ function AdminReservations() {
                 setError("");
 
                 const response = await fetch(
-                    "http://localhost:5000/api/reservations/host",
+                    `${API_URL}/api/reservations/host`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`
