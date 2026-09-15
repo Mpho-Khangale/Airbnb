@@ -1,76 +1,48 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 function ListingDetails() {
     const { id } = useParams();
 
-    const listings = [
-        {
-            id: 1,
-            title: "Modern apartment with city views",
-            location: "Cape Town, South Africa",
-            guests: 4,
-            bedrooms: 2,
-            beds: 2,
-            bathrooms: 2,
-            rating: 4.8,
-            reviews: 124,
-            price: 1450,
-            cleaningFee: 350,
-            serviceFee: 250
-        },
-        {
-            id: 2,
-            title: "Luxury home near the beach",
-            location: "Cape Town, South Africa",
-            guests: 6,
-            bedrooms: 3,
-            beds: 4,
-            bathrooms: 2,
-            rating: 4.9,
-            reviews: 86,
-            price: 2300,
-            cleaningFee: 450,
-            serviceFee: 320
-        },
-        {
-            id: 3,
-            title: "Stylish city apartment",
-            location: "Johannesburg, South Africa",
-            guests: 2,
-            bedrooms: 1,
-            beds: 1,
-            bathrooms: 1,
-            rating: 4.7,
-            reviews: 72,
-            price: 1100,
-            cleaningFee: 250,
-            serviceFee: 180
-        },
-        {
-            id: 4,
-            title: "Relaxing coastal stay",
-            location: "Durban, South Africa",
-            guests: 4,
-            bedrooms: 2,
-            beds: 2,
-            bathrooms: 1,
-            rating: 4.6,
-            reviews: 91,
-            price: 1250,
-            cleaningFee: 300,
-            serviceFee: 200
-        }
-    ];
-
-    const listing =
-        listings.find((item) => item.id === Number(id)) || listings[0];
+    const [listing, setListing] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
     const [checkIn, setCheckIn] = useState("");
     const [checkOut, setCheckOut] = useState("");
     const [guests, setGuests] = useState(1);
+
+    useEffect(() => {
+        const fetchListing = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const response = await fetch(
+                    `http://localhost:5000/api/accommodations/${id}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Accommodation not found.");
+                }
+
+                const data = await response.json();
+
+                setListing(data);
+            } catch (error) {
+                console.error(error);
+                setError(
+                    "Unable to load this accommodation."
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchListing();
+    }, [id]);
 
     const calculateNights = () => {
         if (!checkIn || !checkOut) {
@@ -86,17 +58,62 @@ function ListingDetails() {
             return 0;
         }
 
-        return Math.ceil(difference / (1000 * 60 * 60 * 24));
+        return Math.ceil(
+            difference / (1000 * 60 * 60 * 24)
+        );
     };
 
+    if (loading) {
+        return (
+            <>
+                <Navbar />
+
+                <main className="listing-page">
+                    <div className="location-message">
+                        Loading accommodation...
+                    </div>
+                </main>
+
+                <Footer />
+            </>
+        );
+    }
+
+    if (error || !listing) {
+        return (
+            <>
+                <Navbar />
+
+                <main className="listing-page">
+                    <div className="location-message error-message">
+                        <h2>Accommodation unavailable</h2>
+                        <p>{error}</p>
+                    </div>
+                </main>
+
+                <Footer />
+            </>
+        );
+    }
+
     const nights = calculateNights();
-    const accommodationTotal = listing.price * nights;
+
+    const price = Number(listing.price) || 0;
+    const cleaningFee =
+        Number(listing.cleaningFee) || 0;
+    const serviceFee =
+        Number(listing.serviceFee) || 0;
+    const occupancyTaxes =
+        Number(listing.occupancyTaxes) || 0;
+
+    const accommodationTotal = price * nights;
 
     const total =
         nights > 0
             ? accommodationTotal +
-              listing.cleaningFee +
-              listing.serviceFee
+              cleaningFee +
+              serviceFee +
+              occupancyTaxes
             : 0;
 
     return (
@@ -104,48 +121,76 @@ function ListingDetails() {
             <Navbar />
 
             <main className="listing-page">
-
                 {/* Heading */}
-
                 <section className="listing-heading">
                     <h1>{listing.title}</h1>
 
                     <div className="listing-subheading">
-                        <span>★ {listing.rating}</span>
+                        <span>
+                            ★ {listing.rating || "New"}
+                        </span>
+
+                        {listing.reviews > 0 && (
+                            <>
+                                <span>·</span>
+                                <span>
+                                    {listing.reviews} reviews
+                                </span>
+                            </>
+                        )}
+
                         <span>·</span>
-                        <span>{listing.reviews} reviews</span>
-                        <span>·</span>
+
                         <span>{listing.location}</span>
                     </div>
                 </section>
 
                 {/* Image Gallery */}
-
                 <section className="image-gallery">
                     <div className="gallery-main">
-                        Main property image
+                        {listing.images?.[0] ? (
+                            <img
+                                src={listing.images[0]}
+                                alt={listing.title}
+                            />
+                        ) : (
+                            <span>Main property image</span>
+                        )}
                     </div>
 
                     <div className="gallery-small">
-                        <div>Property image</div>
-                        <div>Property image</div>
-                        <div>Property image</div>
-                        <div>Property image</div>
+                        {[1, 2, 3, 4].map((imageIndex) => (
+                            <div key={imageIndex}>
+                                {listing.images?.[imageIndex] ? (
+                                    <img
+                                        src={
+                                            listing.images[
+                                                imageIndex
+                                            ]
+                                        }
+                                        alt={`${listing.title} ${imageIndex + 1}`}
+                                    />
+                                ) : (
+                                    <span>Property image</span>
+                                )}
+                            </div>
+                        ))}
                     </div>
                 </section>
 
-                {/* Main Information */}
-
                 <section className="listing-main">
-
+                    {/* Property Information */}
                     <div className="listing-information">
-
                         <div className="property-summary">
-                            <h2>Entire place hosted by Airbnb Host</h2>
+                            <h2>
+                                {listing.type} in{" "}
+                                {listing.location}
+                            </h2>
 
                             <p>
-                                {listing.guests} guests · {listing.bedrooms} bedrooms
-                                · {listing.beds} beds · {listing.bathrooms} bathrooms
+                                {listing.guests} guests ·{" "}
+                                {listing.bedrooms} bedrooms ·{" "}
+                                {listing.bathrooms} bathrooms
                             </p>
                         </div>
 
@@ -153,68 +198,78 @@ function ListingDetails() {
 
                         <div className="listing-feature">
                             <h3>Great location</h3>
+
                             <p>
-                                Guests love the location and the surrounding area.
+                                Enjoy your stay in{" "}
+                                {listing.location}.
                             </p>
                         </div>
 
                         <div className="listing-feature">
-                            <h3>Great check-in experience</h3>
+                            <h3>
+                                Great check-in experience
+                            </h3>
+
                             <p>
-                                Recent guests gave the check-in process a high rating.
+                                Everything you need for a
+                                comfortable check-in experience.
                             </p>
                         </div>
 
                         <div className="listing-feature">
                             <h3>Free cancellation</h3>
+
                             <p>
-                                Cancellation options are available for this stay.
+                                Cancellation options may be
+                                available for this stay.
                             </p>
                         </div>
 
                         <hr />
 
+                        {/* Description */}
                         <div className="listing-description">
                             <h2>About this place</h2>
 
-                            <p>
-                                Enjoy a comfortable stay in this beautiful property.
-                                The accommodation offers everything you need for a
-                                relaxing trip and is conveniently located near popular
-                                attractions.
-                            </p>
+                            <p>{listing.description}</p>
                         </div>
 
                         <hr />
 
+                        {/* Amenities */}
                         <div className="amenities">
                             <h2>What this place offers</h2>
 
-                            <div className="amenities-grid">
-                                <span>Wi-Fi</span>
-                                <span>Kitchen</span>
-                                <span>Free parking</span>
-                                <span>TV</span>
-                                <span>Workspace</span>
-                                <span>Air conditioning</span>
-                            </div>
+                            {listing.amenities?.length > 0 ? (
+                                <div className="amenities-grid">
+                                    {listing.amenities.map(
+                                        (amenity, index) => (
+                                            <span key={index}>
+                                                {amenity}
+                                            </span>
+                                        )
+                                    )}
+                                </div>
+                            ) : (
+                                <p>
+                                    No amenities have been
+                                    added yet.
+                                </p>
+                            )}
                         </div>
-
                     </div>
 
-                    {/* Cost Calculator */}
-
+                    {/* Booking Calculator */}
                     <aside className="booking-card">
-
                         <div className="booking-price">
                             <strong>
-                                R{listing.price.toLocaleString()}
+                                R{price.toLocaleString()}
                             </strong>
+
                             <span> / night</span>
                         </div>
 
                         <div className="booking-dates">
-
                             <div>
                                 <label>CHECK-IN</label>
 
@@ -222,7 +277,9 @@ function ListingDetails() {
                                     type="date"
                                     value={checkIn}
                                     onChange={(event) =>
-                                        setCheckIn(event.target.value)
+                                        setCheckIn(
+                                            event.target.value
+                                        )
                                     }
                                 />
                             </div>
@@ -235,11 +292,12 @@ function ListingDetails() {
                                     min={checkIn}
                                     value={checkOut}
                                     onChange={(event) =>
-                                        setCheckOut(event.target.value)
+                                        setCheckOut(
+                                            event.target.value
+                                        )
                                     }
                                 />
                             </div>
-
                         </div>
 
                         <div className="booking-guests">
@@ -248,18 +306,29 @@ function ListingDetails() {
                             <select
                                 value={guests}
                                 onChange={(event) =>
-                                    setGuests(event.target.value)
+                                    setGuests(
+                                        Number(
+                                            event.target.value
+                                        )
+                                    )
                                 }
                             >
                                 {Array.from(
-                                    { length: listing.guests },
+                                    {
+                                        length:
+                                            Number(
+                                                listing.guests
+                                            ) || 1
+                                    },
                                     (_, index) => (
                                         <option
                                             value={index + 1}
                                             key={index + 1}
                                         >
                                             {index + 1}{" "}
-                                            {index === 0 ? "guest" : "guests"}
+                                            {index === 0
+                                                ? "guest"
+                                                : "guests"}
                                         </option>
                                     )
                                 )}
@@ -276,48 +345,73 @@ function ListingDetails() {
 
                         {nights > 0 && (
                             <div className="price-breakdown">
-
                                 <div>
                                     <span>
-                                        R{listing.price.toLocaleString()} ×{" "}
-                                        {nights} nights
+                                        R{price.toLocaleString()} ×{" "}
+                                        {nights}{" "}
+                                        {nights === 1
+                                            ? "night"
+                                            : "nights"}
                                     </span>
 
                                     <span>
-                                        R{accommodationTotal.toLocaleString()}
+                                        R
+                                        {accommodationTotal.toLocaleString()}
                                     </span>
                                 </div>
 
-                                <div>
-                                    <span>Cleaning fee</span>
-                                    <span>
-                                        R{listing.cleaningFee.toLocaleString()}
-                                    </span>
-                                </div>
+                                {cleaningFee > 0 && (
+                                    <div>
+                                        <span>
+                                            Cleaning fee
+                                        </span>
 
-                                <div>
-                                    <span>Service fee</span>
-                                    <span>
-                                        R{listing.serviceFee.toLocaleString()}
-                                    </span>
-                                </div>
+                                        <span>
+                                            R
+                                            {cleaningFee.toLocaleString()}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {serviceFee > 0 && (
+                                    <div>
+                                        <span>
+                                            Service fee
+                                        </span>
+
+                                        <span>
+                                            R
+                                            {serviceFee.toLocaleString()}
+                                        </span>
+                                    </div>
+                                )}
+
+                                {occupancyTaxes > 0 && (
+                                    <div>
+                                        <span>
+                                            Occupancy taxes
+                                        </span>
+
+                                        <span>
+                                            R
+                                            {occupancyTaxes.toLocaleString()}
+                                        </span>
+                                    </div>
+                                )}
 
                                 <hr />
 
                                 <div className="booking-total">
                                     <strong>Total</strong>
+
                                     <strong>
                                         R{total.toLocaleString()}
                                     </strong>
                                 </div>
-
                             </div>
                         )}
-
                     </aside>
-
                 </section>
-
             </main>
 
             <Footer />
