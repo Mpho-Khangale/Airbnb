@@ -21,6 +21,7 @@ function CreateListing() {
     });
 
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -31,26 +32,91 @@ function CreateListing() {
         }));
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setError("");
+    const handleSubmit = async (event) => {
+    event.preventDefault();
 
-        if (
-            !formData.title ||
-            !formData.location ||
-            !formData.description ||
-            !formData.type ||
-            !formData.price
-        ) {
-            setError("Please complete all required fields.");
-            return;
+    setError("");
+
+    if (
+        !formData.title ||
+        !formData.location ||
+        !formData.description ||
+        !formData.type ||
+        !formData.price
+    ) {
+        setError("Please complete all required fields.");
+        return;
+    }
+
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+        navigate("/admin/login");
+        return;
+    }
+
+    const listingData = {
+        title: formData.title.trim(),
+        location: formData.location.trim(),
+        description: formData.description.trim(),
+        type: formData.type,
+
+        bedrooms: Number(formData.bedrooms),
+        bathrooms: Number(formData.bathrooms),
+        guests: Number(formData.guests),
+
+        price: Number(formData.price),
+
+        cleaningFee:
+            Number(formData.cleaningFee) || 0,
+
+        serviceFee:
+            Number(formData.serviceFee) || 0,
+
+        amenities: formData.amenities
+            .split(",")
+            .map((amenity) => amenity.trim())
+            .filter(Boolean),
+
+        images: formData.images.trim()
+            ? [formData.images.trim()]
+            : []
+    };
+
+    try {
+        setLoading(true);
+
+        const response = await fetch(
+            "http://localhost:5000/api/accommodations",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+
+                body: JSON.stringify(listingData)
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message ||
+                    "Unable to create listing."
+            );
         }
 
-        console.log("New listing:", formData);
-
-        // Backend connection will be added later.
         navigate("/admin/listings");
-    };
+    } catch (error) {
+        console.error(error);
+        setError(error.message);
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <>
@@ -298,11 +364,14 @@ function CreateListing() {
                         </button>
 
                         <button
-                            type="submit"
-                            className="admin-primary-button form-submit"
-                        >
-                            Create Listing
-                        </button>
+    type="submit"
+    className="admin-primary-button form-submit"
+    disabled={loading}
+>
+    {loading
+        ? "Creating..."
+        : "Create Listing"}
+</button>
                     </div>
                 </form>
             </main>
