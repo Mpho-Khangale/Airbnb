@@ -103,3 +103,78 @@ button {
 .destination-card {
     cursor: pointer;
 }
+
+.placeholder-image,
+.experience-image {
+    height: 220px;
+    border-radius: 12px;
+    background: #eeeeee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666666;
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+
+.destination-card h3,
+.experience-card h3 {
+    font-size: 17px;
+    margin-bottom: 5px;
+}
+
+.destination-card p,
+.experience-card p {
+    color: #666666;
+}
+
+.experience-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.experience-image {
+    height: 350px;
+}
+
+.shop-section {
+    margin: 20px 5%;
+    min-height: 350px;
+    border-radius: 20px;
+    background: #f7f7f7;
+    padding: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.shop-section h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.shop-section p {
+    color: #666666;
+    margin-bottom: 25px;
+}
+
+.shop-section button {
+    padding: 13px 25px;
+    border: none;
+    border-radius: 8px;
+    background: #222222;
+    color: white;
+    cursor: pointer;
+}
+
+.future-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.future-grid div {
+    padding: 35px 20px;
+    border: 1px solid #dddddd;
+    border-radius: 12px;
+}
