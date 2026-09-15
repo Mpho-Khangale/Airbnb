@@ -150,6 +150,11 @@ function Home() {
     </button>
 
 </div>
+{locationError && (
+    <p className="search-error">
+        {locationError}
+    </p>
+)}
                 </section>
 
                 {/* Inspiration */}
