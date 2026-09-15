@@ -1,45 +1,42 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 
 function AdminListings() {
-    const [listings, setListings] = useState([
-        {
-            id: 1,
-            title: "Modern apartment with city views",
-            location: "Cape Town",
-            price: 1450,
-            guests: 4
-        },
-        {
-            id: 2,
-            title: "Luxury home near the beach",
-            location: "Cape Town",
-            price: 2300,
-            guests: 6
-        },
-        {
-            id: 3,
-            title: "Stylish city apartment",
-            location: "Johannesburg",
-            price: 1100,
-            guests: 2
-        }
-    ]);
+    const [listings, setListings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    const handleDelete = (id) => {
-        const confirmed = window.confirm(
-            "Are you sure you want to delete this listing?"
-        );
+    useEffect(() => {
+        const fetchListings = async () => {
+            try {
+                setLoading(true);
+                setError("");
 
-        if (!confirmed) {
-            return;
-        }
+                const response = await fetch(
+                    "http://localhost:5000/api/accommodations"
+                );
 
-        setListings(
-            listings.filter((listing) => listing.id !== id)
-        );
-    };
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message ||
+                            "Unable to load listings."
+                    );
+                }
+
+                setListings(data);
+            } catch (error) {
+                console.error(error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchListings();
+    }, []);
 
     return (
         <>
@@ -49,74 +46,128 @@ function AdminListings() {
                 <div className="admin-page-heading">
                     <div>
                         <h1>My Listings</h1>
-                        <p>Manage your Airbnb properties.</p>
+                        <p>
+                            Manage your Airbnb properties.
+                        </p>
                     </div>
 
                     <Link
                         to="/admin/create-listing"
-                        className="admin-primary-button"
+                        className="admin-create-button"
                     >
-                        + Create Listing
+                        Create listing
                     </Link>
                 </div>
 
-                <div className="admin-listings">
-                    {listings.length > 0 ? (
-                        listings.map((listing) => (
-                            <div
-                                className="admin-listing-card"
-                                key={listing.id}
-                            >
-                                <div className="admin-listing-image">
-                                    Property image
-                                </div>
+                {loading && (
+                    <div className="admin-message">
+                        <p>Loading listings...</p>
+                    </div>
+                )}
 
-                                <div className="admin-listing-information">
-                                    <div>
-                                        <h2>{listing.title}</h2>
+                {error && (
+                    <div className="admin-message admin-error">
+                        <h2>Something went wrong</h2>
+                        <p>{error}</p>
+                    </div>
+                )}
 
-                                        <p>{listing.location}</p>
-
-                                        <p>
-                                            Up to {listing.guests} guests
-                                        </p>
-
-                                        <strong>
-                                            R{listing.price.toLocaleString()}
-                                            {" "}/ night
-                                        </strong>
-                                    </div>
-
-                                    <div className="admin-listing-actions">
-                                        <Link
-                                            to={`/admin/edit-listing/${listing.id}`}
-                                            className="edit-button"
-                                        >
-                                            Edit
-                                        </Link>
-
-                                        <button
-                                            className="delete-button"
-                                            onClick={() =>
-                                                handleDelete(listing.id)
-                                            }
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="admin-empty">
+                {!loading &&
+                    !error &&
+                    listings.length === 0 && (
+                        <div className="admin-message">
                             <h2>No listings yet</h2>
+
                             <p>
-                                Create your first property listing to get
-                                started.
+                                Create your first property
+                                listing.
                             </p>
                         </div>
                     )}
-                </div>
+
+                {!loading &&
+                    !error &&
+                    listings.length > 0 && (
+                        <div className="admin-listings-grid">
+                            {listings.map((listing) => (
+                                <article
+                                    className="admin-listing-card"
+                                    key={listing._id}
+                                >
+                                    <div className="admin-listing-image">
+                                        {listing.images?.[0] ? (
+                                            <img
+                                                src={
+                                                    listing
+                                                        .images[0]
+                                                }
+                                                alt={
+                                                    listing.title
+                                                }
+                                            />
+                                        ) : (
+                                            <span>
+                                                Property image
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="admin-listing-content">
+                                        <p className="admin-listing-location">
+                                            {listing.location}
+                                        </p>
+
+                                        <h2>
+                                            {listing.title}
+                                        </h2>
+
+                                        <p>
+                                            {listing.guests}{" "}
+                                            {listing.guests === 1
+                                                ? "guest"
+                                                : "guests"}
+                                            {" · "}
+                                            {listing.bedrooms}{" "}
+                                            {listing.bedrooms === 1
+                                                ? "bedroom"
+                                                : "bedrooms"}
+                                            {" · "}
+                                            {listing.bathrooms}{" "}
+                                            {listing.bathrooms === 1
+                                                ? "bathroom"
+                                                : "bathrooms"}
+                                        </p>
+
+                                        <div className="admin-listing-price">
+                                            <strong>
+                                                R
+                                                {Number(
+                                                    listing.price
+                                                ).toLocaleString()}
+                                            </strong>
+                                            <span> / night</span>
+                                        </div>
+
+                                        <div className="admin-listing-actions">
+                                            <Link
+                                                to={`/listing/${listing._id}`}
+                                                className="admin-view-button"
+                                            >
+                                                View
+                                            </Link>
+
+                                            <Link
+                                                to={`/admin/edit-listing/${listing._id}`}
+                                                className="admin-edit-button"
+                                            >
+                                                Edit
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </article>
+                            ))}
+                        </div>
+                    )}
             </main>
         </>
     );
